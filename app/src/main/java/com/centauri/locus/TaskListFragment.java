@@ -4,8 +4,12 @@
 package com.centauri.locus;
 
 import android.app.ListFragment;
+import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 
 import com.centauri.locus.adapter.TaskAdapter;
 import com.centauri.locus.provider.Locus;
@@ -30,5 +34,23 @@ public class TaskListFragment extends ListFragment {
         TaskAdapter adapter = new TaskAdapter(getActivity(), cursor, 0);
         setListAdapter(adapter);
         setRetainInstance(true);
+        setHasOptionsMenu(true);
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+        inflater.inflate(R.menu.fragment_list, menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.action_add:
+                Intent intent = new Intent(getActivity(), GeofenceSelectorActivity.class);
+                startActivity(intent);
+                break;
+        }
+        return super.onOptionsItemSelected(item);
     }
 }

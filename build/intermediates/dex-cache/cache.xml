@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<pre-dex-items>
+
+    <item
+        dex="/Users/mohitd2000/Developer/workspace_locus/Locus/app/build/intermediates/pre-dexed/debug/classes-822cfa6eeeac7351c4b2c8d4facca26e86801e95.jar"
+        jar="/Users/mohitd2000/Developer/workspace_locus/Locus/app/build/intermediates/exploded-aar/com.android.support/appcompat-v7/20.0.0/classes.jar"
+        jumboMode="false"
+        revision="20.0.0"
+        sha1="f21927d22fe31889ecce94dd697a2e75b137e0ef"/>
+    <item
+        dex="/Users/mohitd2000/Developer/workspace_locus/Locus/app/build/intermediates/pre-dexed/debug/classes-a518fd8ae3a6e915f5bf68e422d08eb562ac75d6.jar"
+        jar="/Users/mohitd2000/Developer/workspace_locus/Locus/app/build/intermediates/exploded-aar/com.google.android.gms/play-services/6.1.11/classes.jar"
+        jumboMode="false"
+        revision="20.0.0"
+        sha1="0f700f6802ba1a1f1fa7ac26d5db0666a89d75a6"/>
+    <item
+        dex="/Users/mohitd2000/Developer/workspace_locus/Locus/app/build/intermediates/pre-dexed/debug/datetimepicker-88985bae76b5bc5b20fa749ccffc28e4e87eafd6.jar"
+        jar="/Users/mohitd2000/Developer/workspace_locus/Locus/datetimepicker/datetimepicker.jar"
+        jumboMode="false"
+        revision="20.0.0"
+        sha1="ce75978d71e4b4e245d087c5cbe30266a4d7ae7b"/>
+    <item
+        dex="/Users/mohitd2000/Developer/workspace_locus/Locus/app/build/intermediates/pre-dexed/debug/classes-053d3c3c65dea772d24a5368bc31a3f5c686bf33.jar"
+        jar="/Users/mohitd2000/Developer/workspace_locus/Locus/app/build/intermediates/exploded-aar/com.android.support/support-v4/20.0.0/classes.jar"
+        jumboMode="false"
+        revision="20.0.0"
+        sha1="8694693636ab36910c8100ce527c258ff3ebece0"/>
+    <item
+        dex="/Users/mohitd2000/Developer/workspace_locus/Locus/app/build/intermediates/pre-dexed/debug/support-annotations-20.0.0-f3ffe008729607c764bb26ebc86613704ac472c6.jar"
+        jar="/Users/mohitd2000/Developer/sdk/android-sdk/extras/android/m2repository/com/android/support/support-annotations/20.0.0/support-annotations-20.0.0.jar"
+        jumboMode="false"
+        revision="20.0.0"
+        sha1="9d9013e9ff35fc3756411e62873c363c70c638fa"/>
+    <item
+        dex="/Users/mohitd2000/Developer/workspace_locus/Locus/app/build/intermediates/pre-dexed/debug/internal_impl-20.0.0-aa3288d8f1057b5e56ac3cedd27316d1a744801a.jar"
+        jar="/Users/mohitd2000/Developer/workspace_locus/Locus/app/build/intermediates/exploded-aar/com.android.support/support-v4/20.0.0/libs/internal_impl-20.0.0.jar"
+        jumboMode="false"
+        revision="20.0.0"
+        sha1="e40b3078e3fbd353c9f44da8df25a8fc0078209d"/>
+
+</pre-dex-items>

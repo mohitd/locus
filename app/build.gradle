@@ -10,6 +10,11 @@ android {
         targetSdkVersion 20
     }
 
+    packagingOptions {
+        exclude 'META-INF/LICENSE.txt'
+        exclude 'AndroidManifest.xml'
+    }
+
     buildTypes {
         release {
             runProguard false

@@ -18365,11 +18365,6 @@ false
                 qualifiers=""
                 type="menu" />
             <file
-                name="main"
-                path="/Users/mohitd2000/Developer/workspace_locus/Locus/app/src/main/res/menu/main.xml"
-                qualifiers=""
-                type="menu" />
-            <file
                 path="/Users/mohitd2000/Developer/workspace_locus/Locus/app/src/main/res/values/dimens.xml"
                 qualifiers="" >
                 <dimen name="activity_vertical_margin" >16dp
@@ -18459,6 +18454,31 @@ false
                 <dimen name="activity_horizontal_margin" >64dp
                 </dimen>
             </file>
+            <file
+                name="ic_action_new"
+                path="/Users/mohitd2000/Developer/workspace_locus/Locus/app/src/main/res/drawable-xhdpi/ic_action_new.png"
+                qualifiers="xhdpi-v4"
+                type="drawable" />
+            <file
+                name="ic_action_new"
+                path="/Users/mohitd2000/Developer/workspace_locus/Locus/app/src/main/res/drawable-mdpi/ic_action_new.png"
+                qualifiers="mdpi-v4"
+                type="drawable" />
+            <file
+                name="ic_action_new"
+                path="/Users/mohitd2000/Developer/workspace_locus/Locus/app/src/main/res/drawable-xxhdpi/ic_action_new.png"
+                qualifiers="xxhdpi-v4"
+                type="drawable" />
+            <file
+                name="ic_action_new"
+                path="/Users/mohitd2000/Developer/workspace_locus/Locus/app/src/main/res/drawable-hdpi/ic_action_new.png"
+                qualifiers="hdpi-v4"
+                type="drawable" />
+            <file
+                name="fragment_list"
+                path="/Users/mohitd2000/Developer/workspace_locus/Locus/app/src/main/res/menu/fragment_list.xml"
+                qualifiers=""
+                type="menu" />
         </source>
         <source path="/Users/mohitd2000/Developer/workspace_locus/Locus/app/build/generated/res/rs/debug" />
         <source path="/Users/mohitd2000/Developer/workspace_locus/Locus/app/build/generated/res/generated/debug" />

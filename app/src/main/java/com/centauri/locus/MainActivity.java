@@ -3,7 +3,6 @@ package com.centauri.locus;
 import android.app.ActionBar;
 import android.app.Activity;
 import android.app.FragmentManager;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.widget.DrawerLayout;
 import android.view.Menu;
@@ -42,7 +41,7 @@ public class MainActivity extends Activity implements
 
     @Override
     public void onNavigationDrawerItemSelected(int position) {
-        // update the main content by replacing fragments
+        // update the fragment_list content by replacing fragments
         FragmentManager fragmentManager = getFragmentManager();
         switch (position) {
         case 0:
@@ -50,39 +49,12 @@ public class MainActivity extends Activity implements
                     .commit();
             break;
         case 1:
-            startActivity(new Intent(this, GeofenceSelectorActivity.class));
-            break;
-        case 2:
-            fragmentManager.beginTransaction().replace(R.id.container, new TaskEditFragment())
-                    .commit();
-            break;
-        case 3:
             fragmentManager.beginTransaction().replace(R.id.container, new TaskMapFragment())
                     .commit();
             break;
-        case 4:
+        case 2:
             fragmentManager.beginTransaction().replace(R.id.container, new PlaceListFragment())
                     .commit();
-            break;
-        }
-    }
-
-    public void onSectionAttached(int number) {
-        switch (number) {
-        case 1:
-            title = getString(R.string.title_ongoing);
-            break;
-        case 2:
-            title = getString(R.string.title_nearby);
-            break;
-        case 3:
-            title = getString(R.string.title_completed);
-            break;
-        case 4:
-            title = getString(R.string.title_map);
-            break;
-        case 5:
-            title = getString(R.string.title_places);
             break;
         }
     }
@@ -100,7 +72,6 @@ public class MainActivity extends Activity implements
             // Only show items in the action bar relevant to this screen
             // if the drawer is not showing. Otherwise, let the drawer
             // decide what to show in the action bar.
-            getMenuInflater().inflate(R.menu.main, menu);
             restoreActionBar();
             return true;
         }

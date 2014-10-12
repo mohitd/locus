@@ -1,0 +1,19 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="com.centauri.locus.MainActivity" >
+
+    <item
+        android:id="@+id/action_add"
+        android:showAsAction="always"
+        android:icon="@drawable/ic_action_new"
+        android:title="@string/add"/>
+
+    <item
+        android:id="@+id/action_settings"
+        android:showAsAction="never"
+        android:icon="@drawable/ic_action_settings"
+        android:title="@string/settings"
+        />
+
+</menu>

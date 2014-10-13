@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android" >
+    <item android:id="@+id/menu_delete" 
+        android:title="@string/delete"
+        android:showAsAction="ifRoom" 
+        android:icon="@drawable/ic_action_discard" />
+
+</menu>
+<!-- From: file:/Users/mohitd2000/Developer/workspace_locus/Locus/app/src/main/res/menu/list_view_cab.xml -->

@@ -17,6 +17,8 @@ import android.text.TextUtils;
 import com.centauri.locus.provider.Locus.Place;
 import com.centauri.locus.provider.Locus.Task;
 
+import java.util.HashMap;
+
 /**
  * @author mohitd2000
  * 
@@ -33,11 +35,23 @@ public class LocusProvider extends ContentProvider {
 
     private static final UriMatcher uriMatcher = new UriMatcher(UriMatcher.NO_MATCH);
 
+    private static final HashMap<String, String> tasksProjectionMap;
+
     static {
         uriMatcher.addURI(Locus.AUTHORITY, "tasks", TASKS);
         uriMatcher.addURI(Locus.AUTHORITY, "tasks/*", TASK_ID);
         uriMatcher.addURI(Locus.AUTHORITY, "places", PLACES);
         uriMatcher.addURI(Locus.AUTHORITY, "places/*", PLACE_ID);
+
+        tasksProjectionMap = new HashMap<String, String>();
+        tasksProjectionMap.put(Task._ID, Task._ID);
+        tasksProjectionMap.put(Task.COLUMN_TITLE, Task.COLUMN_TITLE);
+        tasksProjectionMap.put(Task.COLUMN_DESCRIPTION, Task.COLUMN_DESCRIPTION);
+        tasksProjectionMap.put(Task.COLUMN_LATITUDE, Task.COLUMN_LATITUDE);
+        tasksProjectionMap.put(Task.COLUMN_LONGITUDE, Task.COLUMN_LONGITUDE);
+        tasksProjectionMap.put(Task.COLUMN_RADIUS, Task.COLUMN_RADIUS);
+        tasksProjectionMap.put(Task.COLUMN_DUE, Task.COLUMN_DUE);
+        tasksProjectionMap.put(Task.COLUMN_COMPLETED, Task.COLUMN_COMPLETED);
     }
 
     /**
@@ -51,8 +65,8 @@ public class LocusProvider extends ContentProvider {
 
     /**
      * @see android.content.ContentProvider#query(android.net.Uri,
-     *      java.lang.String[], java.lang.String, java.lang.String[],
-     *      java.lang.String)
+     *      String[], String, String[],
+     *      String)
      */
     @Override
     public Cursor query(Uri uri, String[] projection, String selection, String[] selectionArgs,
@@ -63,6 +77,7 @@ public class LocusProvider extends ContentProvider {
         switch (match) {
         case TASKS:
             builder.setTables(Task.TABLE_NAME);
+            builder.setProjectionMap(tasksProjectionMap);
             break;
 
         case TASK_ID:
@@ -128,7 +143,7 @@ public class LocusProvider extends ContentProvider {
 
     /**
      * @see android.content.ContentProvider#update(android.net.Uri,
-     *      android.content.ContentValues, java.lang.String, java.lang.String[])
+     *      android.content.ContentValues, String, String[])
      */
     @Override
     public int update(Uri uri, ContentValues values, String selection, String[] selectionArgs) {
@@ -172,7 +187,7 @@ public class LocusProvider extends ContentProvider {
 
     /**
      * @see android.content.ContentProvider#delete(android.net.Uri,
-     *      java.lang.String, java.lang.String[])
+     *      String, String[])
      */
     @Override
     public int delete(Uri uri, String selection, String[] selectionArgs) {

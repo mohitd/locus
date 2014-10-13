@@ -34,22 +34,26 @@ public class LocusDatabaseHelper extends SQLiteOpenHelper {
      */
     @Override
     public void onCreate(SQLiteDatabase db) {
-        db.execSQL("CREATE TABLE IF NOT EXISTS " + Task.TABLE_NAME + "(" + Locus.Task._ID
-                + " INTEGER PRIMARY KEY AUTOINCREMENT," + Locus.Task.COLUMN_TITLE
-                + " TEXT NOT NULL," + Locus.Task.COLUMN_DESCRIPTION + " TEXT,"
-                + Locus.Task.COLUMN_LATITUDE + " REAL," + Locus.Task.COLUMN_LONGITUDE + " REAL,"
-                + Locus.Task.COLUMN_RADIUS + " INTEGER," + Locus.Task.COLUMN_DUE + " TEXT,"
-                + Locus.Task.COLUMN_COMPLETED + " INTEGER" + ");");
+        db.execSQL("CREATE TABLE IF NOT EXISTS " + Task.TABLE_NAME + "(" + Task._ID
+                + " INTEGER PRIMARY KEY AUTOINCREMENT," + Task.COLUMN_TITLE
+                + " TEXT NOT NULL," + Task.COLUMN_DESCRIPTION + " TEXT,"
+                + Task.COLUMN_LATITUDE + " REAL," + Task.COLUMN_LONGITUDE + " REAL,"
+                + Task.COLUMN_RADIUS + " INTEGER," + Task.COLUMN_DUE + " REAL,"
+                + Task.COLUMN_COMPLETED + " INTEGER" + ");");
 
-        db.execSQL("CREATE TABLE IF NOT EXISTS " + Place.TABLE_NAME + "(" + Locus.Place._ID
-                + " INTEGER PRIMARY KEY AUTOINCREMENT," + Locus.Place.COLUMN_TITLE
-                + " TEXT NOT NULL," + Locus.Place.COLUMN_LATITUDE + " REAL,"
-                + Locus.Place.COLUMN_LONGITUDE + " REAL" + ");");
+        db.execSQL("CREATE TABLE IF NOT EXISTS " + Place.TABLE_NAME + "(" + Place._ID
+                + " INTEGER PRIMARY KEY AUTOINCREMENT," + Place.COLUMN_TITLE
+                + " TEXT NOT NULL," + Place.COLUMN_LATITUDE + " REAL,"
+                + Place.COLUMN_LONGITUDE + " REAL" + ");");
 
-        db.execSQL("INSERT INTO task (title, description, latitude, longitude) VALUES('Do some task', 'This is some description that is hopefully much much much much longer than the description box', "
-                + "40.7127, -74.0059);");
-        db.execSQL("INSERT INTO task (title, latitude, longitude) VALUES('Do some task that is hopefully much longer than the space provided for the title', "
-                + "40.0000, -83.0145);");
+        db.execSQL("INSERT INTO task (title, description, latitude, longitude, radius, due) VALUES('Do some task', 'This is some description that is hopefully much much much much longer than the description box', "
+                + "40.7127, -74.0059, 50, 86400000);");
+        db.execSQL("INSERT INTO task (title, latitude, longitude, radius, due) VALUES('Do some task that is hopefully much longer than the space provided for the title', "
+                + "40.0000, -83.0145, 100, 86400000);");
+        db.execSQL("INSERT INTO task (title, description, latitude, longitude, radius, due, completed) VALUES('Do some task', 'Finished this task!', "
+                + "40.7127, -74.0059, 50, 86400000, 1);");
+        db.execSQL("INSERT INTO task (title, latitude, longitude, radius, due, completed) VALUES('Another finished task', "
+                + "40.0000, -83.0145, 100, 86400000, 1);");
 
         db.execSQL("INSERT INTO place (title, latitude, longitude) VALUES('New York City',"
                 + "40.7127, -74.0059);");

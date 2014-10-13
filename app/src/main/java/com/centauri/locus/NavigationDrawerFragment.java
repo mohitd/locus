@@ -100,7 +100,7 @@ public class NavigationDrawerFragment extends Fragment {
         });
         drawerListView.setAdapter(new ArrayAdapter<String>(getActionBar().getThemedContext(),
                 android.R.layout.simple_list_item_activated_1, android.R.id.text1, new String[] {
-                    getString(R.string.title_ongoing),  getString(R.string.title_map),
+                    getString(R.string.title_ongoing), getString(R.string.title_map),
                     getString(R.string.title_places), }));
         drawerListView.setItemChecked(currentSelectedPosition, true);
         return drawerListView;
@@ -123,7 +123,7 @@ public class NavigationDrawerFragment extends Fragment {
         fragmentContainerView = getActivity().findViewById(fragmentId);
         this.drawerLayout = drawerLayout;
 
-        // set a custom shadow that overlays the fragment_list content when the drawer
+        // set a custom shadow that overlays the main content when the drawer
         // opens
         drawerLayout.setDrawerShadow(R.drawable.drawer_shadow, GravityCompat.START);
         // set up the drawer's list view with items and click listener

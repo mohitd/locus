@@ -84,7 +84,7 @@ public class StaticMapsLoader extends AsyncTask<GeoPoint, Void, Bitmap> {
     }
 
     /**
-     * @see android.os.AsyncTask#onPostExecute(java.lang.Object)
+     * @see android.os.AsyncTask#onPostExecute(Object)
      */
     @Override
     protected void onPostExecute(Bitmap result) {

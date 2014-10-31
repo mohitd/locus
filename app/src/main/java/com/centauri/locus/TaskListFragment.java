@@ -22,6 +22,7 @@ import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.ListView;
 
 import com.centauri.locus.adapter.TaskAdapter;
+import com.centauri.locus.geofence.GeofenceRemover;
 import com.centauri.locus.provider.Locus;
 
 import java.util.ArrayList;
@@ -33,6 +34,8 @@ import java.util.List;
  */
 public class TaskListFragment extends ListFragment implements MultiChoiceModeListener,
         OnItemLongClickListener {
+
+    private static final String TAG = TaskListFragment.class.getSimpleName();
 
     private static final String[] PROJECTION = { Locus.Task._ID, Locus.Task.COLUMN_TITLE,
         Locus.Task.COLUMN_DESCRIPTION, Locus.Task.COLUMN_LATITUDE, Locus.Task.COLUMN_LONGITUDE,
@@ -46,6 +49,7 @@ public class TaskListFragment extends ListFragment implements MultiChoiceModeLis
     private TaskAdapter adapter;
 
     private List<Long> ids;
+    private GeofenceRemover geofenceRemover;
     private ActionMode actionMode;
 
     /**
@@ -56,15 +60,16 @@ public class TaskListFragment extends ListFragment implements MultiChoiceModeLis
         super.onCreate(savedInstanceState);
         Cursor cursor = null;
         if (getArguments() != null && getArguments().getInt(MainActivity.KEY_TASK_ID) == 0) {
-            Log.i("------------------", "Completed tasks");
+            Log.i(TAG, "Completed tasks");
             cursor = getActivity().getContentResolver().query(Locus.Task.CONTENT_URI, PROJECTION,
                     "completed = 1", null, null);
         } else {
-            Log.i("------------------", "Not Completed tasks");
+            Log.i(TAG, "Not Completed tasks");
             cursor = getActivity().getContentResolver().query(Locus.Task.CONTENT_URI, PROJECTION,
                     "completed = 0", null, null);
         }
         adapter = new TaskAdapter(getActivity(), cursor, 0);
+        geofenceRemover = new GeofenceRemover(getActivity());
         setListAdapter(adapter);
         setHasOptionsMenu(true);
     }
@@ -167,10 +172,15 @@ public class TaskListFragment extends ListFragment implements MultiChoiceModeLis
     public boolean onActionItemClicked(ActionMode actionMode, MenuItem menuItem) {
         switch (menuItem.getItemId()) {
         case R.id.menu_delete:
+            List<String> geofenceIds = new ArrayList<String>();
             for (Long id : ids) {
                 Uri uri = ContentUris.withAppendedId(Locus.Task.CONTENT_URI, id);
                 getActivity().getContentResolver().delete(uri, null, null);
+                geofenceIds.add(String.valueOf(id));
             }
+            geofenceRemover.removeGeofencesById(geofenceIds);
+            Log.i(TAG, "Removed geofences: " + geofenceIds.toString());
+
             Cursor cursor = getActivity().getContentResolver().query(Locus.Task.CONTENT_URI,
                     PROJECTION, null, null, null);
             adapter.swapCursor(cursor);

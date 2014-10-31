@@ -42,6 +42,8 @@ import com.google.android.gms.maps.model.MarkerOptions;
 public class GeofenceSelectorActivity extends FragmentActivity implements OnMapClickListener,
         ConnectionCallbacks, OnConnectionFailedListener {
 
+    private static final String TAG = GeofenceSelectorActivity.class.getSimpleName();
+
     private GoogleMap map;
     private LocationClient locationClient;
     private LatLng markerLoc;
@@ -164,20 +166,7 @@ public class GeofenceSelectorActivity extends FragmentActivity implements OnMapC
 
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                LinearLayout linearLayout = (LinearLayout) viewLayout;
-                ContentValues values = new ContentValues();
-                values.put(Locus.Task.COLUMN_TITLE, ((EditText) linearLayout
-                        .findViewById(R.id.newTaskEditText)).getText().toString());
-                values.put(Locus.Task.COLUMN_DESCRIPTION, "");
-                values.put(Locus.Task.COLUMN_LATITUDE, loc.latitude);
-                values.put(Locus.Task.COLUMN_LONGITUDE, loc.longitude);
-                values.put(Locus.Task.COLUMN_RADIUS, geofenceCircle.getRadius());
-                values.put(Locus.Task.COLUMN_DUE, System.currentTimeMillis());
-                Uri uri = getContentResolver().insert(Locus.Task.CONTENT_URI, values);
-
-                Intent intent = new Intent(GeofenceSelectorActivity.this, TaskEditActivity.class);
-                intent.putExtra(MainActivity.KEY_TASK_ID, ContentUris.parseId(uri));
-                startActivity(intent);
+                addGeofence((LinearLayout) viewLayout, loc, true);
                 dialog.dismiss();
             }
         });
@@ -185,17 +174,7 @@ public class GeofenceSelectorActivity extends FragmentActivity implements OnMapC
 
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                LinearLayout linearLayout = (LinearLayout) viewLayout;
-                ContentValues values = new ContentValues();
-                values.put(Locus.Task.COLUMN_TITLE, ((EditText) linearLayout
-                        .findViewById(R.id.newTaskEditText)).getText().toString());
-                values.put(Locus.Task.COLUMN_DESCRIPTION, "");
-                values.put(Locus.Task.COLUMN_LATITUDE, loc.latitude);
-                values.put(Locus.Task.COLUMN_LONGITUDE, loc.longitude);
-                values.put(Locus.Task.COLUMN_RADIUS, geofenceCircle.getRadius());
-                values.put(Locus.Task.COLUMN_DUE, System.currentTimeMillis());
-                getContentResolver().insert(Locus.Task.CONTENT_URI, values);
-                NavUtils.navigateUpFromSameTask(GeofenceSelectorActivity.this);
+                addGeofence((LinearLayout) viewLayout, loc, false);
                 dialog.dismiss();
             }
         });
@@ -215,6 +194,28 @@ public class GeofenceSelectorActivity extends FragmentActivity implements OnMapC
         geofenceCircle.remove();
         hasPlacedMarker = false;
         hasPlacedGeofence = false;
+    }
+
+    private void addGeofence(LinearLayout viewLayout, LatLng loc, boolean details) {
+        LinearLayout linearLayout = (LinearLayout) viewLayout;
+        ContentValues values = new ContentValues();
+        values.put(Locus.Task.COLUMN_TITLE, ((EditText) linearLayout
+                .findViewById(R.id.newTaskEditText)).getText().toString());
+        values.put(Locus.Task.COLUMN_DESCRIPTION, "");
+        values.put(Locus.Task.COLUMN_LATITUDE, loc.latitude);
+        values.put(Locus.Task.COLUMN_LONGITUDE, loc.longitude);
+        values.put(Locus.Task.COLUMN_RADIUS, geofenceCircle.getRadius());
+        values.put(Locus.Task.COLUMN_DUE, System.currentTimeMillis());
+        Uri uri = getContentResolver().insert(Locus.Task.CONTENT_URI, values);
+        Log.i(TAG, "Added geofence: " + uri.getLastPathSegment());
+
+        if (details) {
+            Intent intent = new Intent(GeofenceSelectorActivity.this, TaskEditActivity.class);
+            intent.putExtra(MainActivity.KEY_TASK_ID, ContentUris.parseId(uri));
+            startActivity(intent);
+        } else {
+            NavUtils.navigateUpFromSameTask(this);
+        }
     }
 
 }

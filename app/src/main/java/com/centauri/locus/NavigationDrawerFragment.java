@@ -1,14 +1,15 @@
 package com.centauri.locus;
 
-import android.app.ActionBar;
+import android.support.v7.app.ActionBar;
 import android.app.Activity;
-import android.app.Fragment;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.support.v4.app.Fragment;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -98,7 +99,7 @@ public class NavigationDrawerFragment extends Fragment {
                 selectItem(position);
             }
         });
-        drawerListView.setAdapter(new ArrayAdapter<String>(getActionBar().getThemedContext(),
+        drawerListView.setAdapter(new ArrayAdapter<String>(getActivity(),
                 android.R.layout.simple_list_item_activated_1, android.R.id.text1, new String[] {
                     getString(R.string.title_ongoing), getString(R.string.title_map),
                     getString(R.string.title_places), }));
@@ -275,7 +276,7 @@ public class NavigationDrawerFragment extends Fragment {
     }
 
     private ActionBar getActionBar() {
-        return getActivity().getActionBar();
+        return ((ActionBarActivity) getActivity()).getSupportActionBar();
     }
 
     /**

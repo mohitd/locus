@@ -1,7 +1,5 @@
 package com.centauri.locus;
 
-import android.app.ActionBar;
-import android.app.Activity;
 import android.app.FragmentManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -10,18 +8,19 @@ import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.ActionBarActivity;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.Toast;
 
 import com.centauri.locus.geofence.GeofenceUtils;
 
-public class MainActivity extends Activity implements
+public class MainActivity extends ActionBarActivity implements
         NavigationDrawerFragment.NavigationDrawerCallbacks,
         TaskListFragment.OnListItemClickedCallback {
 
@@ -47,7 +46,7 @@ public class MainActivity extends Activity implements
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        navigationDrawerFragment = (NavigationDrawerFragment) getFragmentManager()
+        navigationDrawerFragment = (NavigationDrawerFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.navigation_drawer);
         title = getTitle();
 
@@ -118,7 +117,7 @@ public class MainActivity extends Activity implements
     }
 
     public void restoreActionBar() {
-        ActionBar actionBar = getActionBar();
+        ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayShowTitleEnabled(true);
         actionBar.setTitle(title);
     }

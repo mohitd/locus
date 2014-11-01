@@ -197,9 +197,8 @@ public class GeofenceSelectorActivity extends FragmentActivity implements OnMapC
     }
 
     private void addGeofence(LinearLayout viewLayout, LatLng loc, boolean details) {
-        LinearLayout linearLayout = (LinearLayout) viewLayout;
         ContentValues values = new ContentValues();
-        values.put(Locus.Task.COLUMN_TITLE, ((EditText) linearLayout
+        values.put(Locus.Task.COLUMN_TITLE, ((EditText) viewLayout
                 .findViewById(R.id.newTaskEditText)).getText().toString());
         values.put(Locus.Task.COLUMN_DESCRIPTION, "");
         values.put(Locus.Task.COLUMN_LATITUDE, loc.latitude);

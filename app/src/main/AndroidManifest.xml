@@ -29,7 +29,8 @@
         </activity>
 
         <activity
-            android:name="com.centauri.locus.GeofenceSelectorActivity" />
+            android:name="com.centauri.locus.GeofenceSelectorActivity"
+            android:parentActivityName=".MainActivity" />
         <provider android:name=".provider.LocusProvider" 
             android:authorities="com.centauri.locus.provider.LocusProvider"
             android:exported="false" />

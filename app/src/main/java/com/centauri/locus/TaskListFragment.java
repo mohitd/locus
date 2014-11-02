@@ -10,13 +10,14 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 import android.view.ActionMode;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.AbsListView.MultiChoiceModeListener;
+import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.ListView;
@@ -32,7 +33,7 @@ import java.util.List;
  * @author mohitd2000
  * 
  */
-public class TaskListFragment extends ListFragment implements MultiChoiceModeListener,
+public class TaskListFragment extends ListFragment implements AbsListView.MultiChoiceModeListener,
         OnItemLongClickListener {
 
     private static final String TAG = TaskListFragment.class.getSimpleName();
@@ -104,7 +105,7 @@ public class TaskListFragment extends ListFragment implements MultiChoiceModeLis
         getListView().setChoiceMode(ListView.CHOICE_MODE_MULTIPLE_MODAL);
         getListView().setMultiChoiceModeListener(this);
         getListView().setOnItemLongClickListener(this);
-        getListView().setBackground(getResources().getDrawable(R.drawable.listitem_background));
+        getListView().setItemsCanFocus(false);
     }
 
     /**
@@ -202,6 +203,7 @@ public class TaskListFragment extends ListFragment implements MultiChoiceModeLis
         actionMode = null;
     }
 
+
     /**
      * @see android.widget.AbsListView.MultiChoiceModeListener#onItemCheckedStateChanged(android.view.ActionMode,
      *      int, long, boolean)
@@ -209,6 +211,7 @@ public class TaskListFragment extends ListFragment implements MultiChoiceModeLis
     @Override
     public void onItemCheckedStateChanged(ActionMode actionMode, int position, long id,
             boolean checked) {
+        actionMode.invalidate();
         if (checked) {
             ids.add(id);
         } else {
@@ -226,7 +229,6 @@ public class TaskListFragment extends ListFragment implements MultiChoiceModeLis
             return false;
         }
 
-        actionMode = getActivity().startActionMode(this);
         getListView().setItemChecked(position, true);
         return true;
     }

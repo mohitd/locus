@@ -11,6 +11,7 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.NavUtils;
+import android.support.v7.app.ActionBarActivity;
 import android.view.MenuItem;
 
 import com.centauri.locus.provider.Locus;
@@ -19,7 +20,7 @@ import com.centauri.locus.provider.Locus;
  * @author mohitd2000
  *
  */
-public class TaskEditActivity extends Activity {
+public class TaskEditActivity extends ActionBarActivity {
     public static final String ACTION_SNOOZE = "com.centauri.locus.action.SNOOZE";
     public static final String ACTION_CONFIRM = "com.centauri.locus.action.CONFIRM";
 
@@ -69,8 +70,7 @@ public class TaskEditActivity extends Activity {
                     .commit();
         }
 
-        getActionBar().setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
-        getActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
 
     /**

@@ -159,8 +159,10 @@ public class GeofenceRequester implements OnAddGeofencesResultListener, Connecti
         // transition occurs
         mGeofencePendingIntent = createRequestPendingIntent();
 
-        // Send a request to add the current geofences
-        mLocationClient.addGeofences(mCurrentGeofences, mGeofencePendingIntent, this);
+        if (!mCurrentGeofences.isEmpty()) {
+            // Send a request to add the current geofences
+            mLocationClient.addGeofences(mCurrentGeofences, mGeofencePendingIntent, this);
+        }
     }
 
     /*

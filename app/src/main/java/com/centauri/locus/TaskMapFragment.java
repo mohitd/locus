@@ -96,6 +96,10 @@ public class TaskMapFragment extends MapFragment implements ConnectionCallbacks,
             int radius = cursor.getInt(cursor.getColumnIndexOrThrow(Locus.Task.COLUMN_RADIUS));
             long due = cursor.getLong(cursor.getColumnIndexOrThrow(Locus.Task.COLUMN_DUE));
 
+            if (radius <= 0) {
+                continue;
+            }
+
             SimpleGeofence geofence = new SimpleGeofence(String.valueOf(id), lat, lon, radius, due,
                     Geofence.GEOFENCE_TRANSITION_ENTER);
             simpleGeofences.add(geofence);

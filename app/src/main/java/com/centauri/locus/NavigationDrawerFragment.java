@@ -106,6 +106,10 @@ public class NavigationDrawerFragment extends Fragment {
                     getString(R.string.title_ongoing), getString(R.string.title_map),
                     getString(R.string.title_places), }));
         drawerListView.setItemChecked(currentSelectedPosition, true);
+
+        // This is to make sure it doesn't change to the blue color when someone long presses
+        // and drags on a ListView item
+        drawerListView.setCacheColorHint(android.R.color.white);
         return drawerListView;
     }
 

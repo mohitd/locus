@@ -9,7 +9,14 @@
          https://developer.android.com/design/patterns/navigation-drawer.html
     -->
     <dimen name="navigation_drawer_width">240dp</dimen>
-    
-    <dimen name="imageview_height">200dp</dimen>
+
+    <dimen name="nav_drawer_side_padding">16dp</dimen>
+    <dimen name="nav_drawer_icon_size">24dp</dimen>
+
+    <!--
+        This padding was calculated from the design guidelines. Left padding for the
+        navigation drawer is 16dp and the images should be 24dp images
+    -->
+    <dimen name="nav_drawer_between_padding">32dp</dimen>
 
 </resources>

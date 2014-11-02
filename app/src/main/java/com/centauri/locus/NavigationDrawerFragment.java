@@ -21,6 +21,8 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
+import com.centauri.locus.adapter.NavDrawerAdapter;
+
 /**
  * Fragment used for managing interactions for and presentation of a navigation
  * drawer. See the <a href=
@@ -99,8 +101,8 @@ public class NavigationDrawerFragment extends Fragment {
                 selectItem(position);
             }
         });
-        drawerListView.setAdapter(new ArrayAdapter<String>(getActivity(),
-                R.layout.navigation_drawer_item, R.id.navigation_drawer_item, new String[] {
+        drawerListView.setAdapter(new NavDrawerAdapter(getActivity(),
+                R.layout.nav_drawer_item, R.id.navigation_drawer_item, new String[] {
                     getString(R.string.title_ongoing), getString(R.string.title_map),
                     getString(R.string.title_places), }));
         drawerListView.setItemChecked(currentSelectedPosition, true);

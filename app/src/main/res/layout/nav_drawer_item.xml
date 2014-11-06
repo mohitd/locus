@@ -11,7 +11,6 @@
         android:paddingRight="@dimen/nav_drawer_side_padding"
         android:paddingStart="@dimen/nav_drawer_side_padding"
         android:drawablePadding="@dimen/nav_drawer_between_padding"
-        android:textColor="@color/nav_drawer_text_color"
-        android:textSize="@dimen/abc_text_size_small_material"
-        android:textStyle="bold" />
+        android:textColor="@android:color/black"
+        android:textSize="@dimen/abc_text_size_body_1_material" />
 

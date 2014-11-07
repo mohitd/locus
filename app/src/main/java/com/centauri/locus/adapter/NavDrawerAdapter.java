@@ -36,7 +36,7 @@ public class NavDrawerAdapter extends ArrayAdapter<String> {
 
         switch (position) {
             case 0:
-                icon = context.getResources().getDrawable(R.drawable.ic_drawer_current);
+                icon = context.getResources().getDrawable(R.drawable.ic_drawer_inbox);
                 break;
             case 1:
                 icon = context.getResources().getDrawable(R.drawable.ic_drawer_map);

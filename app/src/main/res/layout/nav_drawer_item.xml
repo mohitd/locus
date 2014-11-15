@@ -1,16 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<TextView xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/navigation_drawer_item"
-    android:layout_width="fill_parent"
-    android:layout_height="?attr/listPreferredItemHeightSmall"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="48dp"
     android:background="@drawable/nav_drawer_item_background"
-    android:drawablePadding="@dimen/nav_drawer_between_padding"
-    android:gravity="center_vertical"
-    android:paddingEnd="@dimen/nav_drawer_side_padding"
-    android:paddingLeft="@dimen/nav_drawer_side_padding"
-    android:paddingRight="@dimen/nav_drawer_side_padding"
-    android:paddingStart="@dimen/nav_drawer_side_padding"
-    android:textColor="@android:color/black"
-    android:textSize="@dimen/abc_text_size_small_material" />
+    android:gravity="start|center_vertical"
+    android:orientation="horizontal"
+    android:paddingLeft="@dimen/keyline_1"
+    android:paddingRight="@dimen/keyline_1">
+
+    <ImageView
+        android:id="@+id/icon"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:layout_marginRight="32dp"/>
+
+    <TextView xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="start|center_vertical"
+        android:gravity="center_vertical"
+        android:textColor="@android:color/black"
+        android:textSize="@dimen/abc_text_size_small_material" />
+
+</LinearLayout>
 

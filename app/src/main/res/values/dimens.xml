@@ -19,4 +19,7 @@
     -->
     <dimen name="nav_drawer_between_padding">32dp</dimen>
 
+    <dimen name="keyline_1">16dp</dimen>
+    <dimen name="keyline_2">72dp</dimen>
+
 </resources>

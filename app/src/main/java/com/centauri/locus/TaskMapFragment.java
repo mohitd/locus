@@ -25,6 +25,7 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.util.ArrayList;
@@ -35,15 +36,9 @@ import java.util.List;
  * 
  */
 public class TaskMapFragment extends MapFragment implements ConnectionCallbacks,
-        OnConnectionFailedListener {
-
-    private GeofenceRequester geofenceRequester;
-    private GeofenceRemover geofenceRemover;
+        OnConnectionFailedListener, GoogleMap.OnMarkerClickListener {
 
     private LocationClient locationClient;
-
-    private List<Geofence> geofences;
-    private List<SimpleGeofence> simpleGeofences;
 
     private static final String[] PROJECTION = { Locus.Task._ID, Locus.Task.COLUMN_TITLE,
         Locus.Task.COLUMN_DESCRIPTION, Locus.Task.COLUMN_LATITUDE, Locus.Task.COLUMN_LONGITUDE,
@@ -80,11 +75,11 @@ public class TaskMapFragment extends MapFragment implements ConnectionCallbacks,
         locationClient.connect();
         getMap().setMyLocationEnabled(true);
         getMap().getUiSettings().setMyLocationButtonEnabled(true);
+        getMap().setOnMarkerClickListener(this);
 
-        geofences = new ArrayList<Geofence>();
-        simpleGeofences = new ArrayList<SimpleGeofence>();
-        geofenceRequester = new GeofenceRequester(getActivity());
-        geofenceRemover = new GeofenceRemover(getActivity());
+        List<Geofence> geofences = new ArrayList<Geofence>();
+        List<SimpleGeofence> simpleGeofences = new ArrayList<SimpleGeofence>();
+        GeofenceRequester geofenceRequester = new GeofenceRequester(getActivity());
 
         Cursor cursor = getActivity().getContentResolver().query(Locus.Task.CONTENT_URI,
                 PROJECTION, null, null, null);
@@ -153,4 +148,8 @@ public class TaskMapFragment extends MapFragment implements ConnectionCallbacks,
 
     }
 
+    @Override
+    public boolean onMarkerClick(Marker marker) {
+        return false;
+    }
 }

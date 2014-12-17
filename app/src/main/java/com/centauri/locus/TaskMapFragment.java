@@ -18,8 +18,11 @@ import com.centauri.locus.provider.Locus;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesClient.ConnectionCallbacks;
 import com.google.android.gms.common.GooglePlayServicesClient.OnConnectionFailedListener;
+import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.Geofence;
-import com.google.android.gms.location.LocationClient;
+import com.google.android.gms.location.LocationListener;
+import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
@@ -35,10 +38,11 @@ import java.util.List;
  * @author mohitd2000
  * 
  */
-public class TaskMapFragment extends MapFragment implements ConnectionCallbacks,
-        OnConnectionFailedListener, GoogleMap.OnMarkerClickListener {
+public class TaskMapFragment extends MapFragment implements GoogleApiClient.ConnectionCallbacks,
+        GoogleApiClient.OnConnectionFailedListener, GoogleMap.OnMarkerClickListener, LocationListener {
 
-    private LocationClient locationClient;
+    private GoogleApiClient googleApiClient;
+    private LocationRequest locationRequest;
 
     private static final String[] PROJECTION = { Locus.Task._ID, Locus.Task.COLUMN_TITLE,
         Locus.Task.COLUMN_DESCRIPTION, Locus.Task.COLUMN_LATITUDE, Locus.Task.COLUMN_LONGITUDE,
@@ -71,8 +75,11 @@ public class TaskMapFragment extends MapFragment implements ConnectionCallbacks,
     @Override
     public void onStart() {
         super.onStart();
-        locationClient = new LocationClient(getActivity(), this, this);
-        locationClient.connect();
+        googleApiClient = new GoogleApiClient.Builder(getActivity())
+                .addApi(LocationServices.API)
+                .addConnectionCallbacks(this)
+                .addOnConnectionFailedListener(this).build();
+
         getMap().setMyLocationEnabled(true);
         getMap().getUiSettings().setMyLocationButtonEnabled(true);
         getMap().setOnMarkerClickListener(this);
@@ -132,19 +139,22 @@ public class TaskMapFragment extends MapFragment implements ConnectionCallbacks,
      * @see com.google.android.gms.common.GooglePlayServicesClient.ConnectionCallbacks#onConnected(android.os.Bundle)
      */
     @Override
-    public void onConnected(Bundle args) {
-        Location loc = locationClient.getLastLocation();
-        LatLng latlon = new LatLng(loc.getLatitude(), loc.getLongitude());
+    public void onConnected(Bundle dataBundle) {
+        locationRequest = LocationRequest.create();
+        locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+        locationRequest.setInterval(5000);
 
+        LocationServices.FusedLocationApi.requestLocationUpdates(googleApiClient, locationRequest, this);
+    }
+
+    @Override
+    public void onLocationChanged(Location location) {
+        LatLng latlon = new LatLng(location.getLatitude(), location.getLongitude());
         getMap().animateCamera(CameraUpdateFactory.newLatLngZoom(latlon, 16.0f));
     }
 
-    /**
-     * @see com.google.android.gms.common.GooglePlayServicesClient.ConnectionCallbacks#onDisconnected()
-     */
     @Override
-    public void onDisconnected() {
-        // TODO Auto-generated method stub
+    public void onConnectionSuspended(int i) {
 
     }
 

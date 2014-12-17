@@ -11,11 +11,8 @@ import android.util.Log;
 
 import com.centauri.locus.R;
 import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.GooglePlayServicesClient;
-import com.google.android.gms.common.GooglePlayServicesClient.ConnectionCallbacks;
-import com.google.android.gms.common.GooglePlayServicesClient.OnConnectionFailedListener;
-import com.google.android.gms.location.LocationClient;
-import com.google.android.gms.location.LocationClient.OnRemoveGeofencesResultListener;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.location.LocationStatusCodes;
 
 import java.util.Arrays;
@@ -33,8 +30,7 @@ import java.util.List;
  * automatically.
  *
  */
-public class GeofenceRemover implements ConnectionCallbacks, OnConnectionFailedListener,
-        OnRemoveGeofencesResultListener {
+public class GeofenceRemover implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
 
     // Storage for a context from the calling client
     private Context mContext;
@@ -42,8 +38,7 @@ public class GeofenceRemover implements ConnectionCallbacks, OnConnectionFailedL
     // Stores the current list of geofences
     private List<String> mCurrentGeofenceIds;
 
-    // Stores the current instantiation of the location client
-    private LocationClient mLocationClient;
+    private GoogleApiClient googleApiClient;
 
     // The PendingIntent sent in removeGeofencesByIntent
     private PendingIntent mCurrentIntent;
@@ -72,7 +67,7 @@ public class GeofenceRemover implements ConnectionCallbacks, OnConnectionFailedL
 
         // Initialize the globals to null
         mCurrentGeofenceIds = null;
-        mLocationClient = null;
+        googleApiClient = null;
         mInProgress = false;
     }
 
@@ -167,12 +162,12 @@ public class GeofenceRemover implements ConnectionCallbacks, OnConnectionFailedL
 
         // If removeGeofencesByIntent was called
         case INTENT:
-            mLocationClient.removeGeofences(mCurrentIntent, this);
+            LocationServices.GeofencingApi.removeGeofences(googleApiClient, mCurrentIntent);
             break;
 
         // If removeGeofencesById was called
         case LIST:
-            mLocationClient.removeGeofences(mCurrentGeofenceIds, this);
+            LocationServices.GeofencingApi.removeGeofences(googleApiClient, mCurrentGeofenceIds);
             break;
         }
     }
@@ -191,12 +186,20 @@ public class GeofenceRemover implements ConnectionCallbacks, OnConnectionFailedL
      *
      * @return A LocationClient object
      */
-    private GooglePlayServicesClient getLocationClient() {
-        if (mLocationClient == null) {
+    private GoogleApiClient getLocationClient() {
+        if (googleApiClient == null) {
 
-            mLocationClient = new LocationClient(mContext, this, this);
+            googleApiClient = new GoogleApiClient.Builder(mContext)
+                    .addApi(LocationServices.API)
+                    .addConnectionCallbacks(this)
+                    .addOnConnectionFailedListener(this).build();
         }
-        return mLocationClient;
+        return googleApiClient;
+    }
+
+    @Override
+    public void onConnectionSuspended(int i) {
+
     }
 
     /**
@@ -208,7 +211,6 @@ public class GeofenceRemover implements ConnectionCallbacks, OnConnectionFailedL
      * @param requestIntent
      *            The Intent used to request the removal.
      */
-    @Override
     public void onRemoveGeofencesByPendingIntentResult(int statusCode, PendingIntent requestIntent) {
 
         // Create a broadcast Intent that notifies other components of success
@@ -255,7 +257,6 @@ public class GeofenceRemover implements ConnectionCallbacks, OnConnectionFailedL
      * @param geofenceRequestIds
      *            The IDs removed
      */
-    @Override
     public void onRemoveGeofencesByRequestIdsResult(int statusCode, String[] geofenceRequestIds) {
 
         // Create a broadcast Intent that notifies other components of success
@@ -344,7 +345,6 @@ public class GeofenceRemover implements ConnectionCallbacks, OnConnectionFailedL
     /*
      * Called by Location Services if the connection is lost.
      */
-    @Override
     public void onDisconnected() {
 
         // A request is no longer in progress
@@ -354,7 +354,7 @@ public class GeofenceRemover implements ConnectionCallbacks, OnConnectionFailedL
         Log.d(GeofenceUtils.APPTAG, mContext.getString(R.string.disconnected));
 
         // Destroy the current location client
-        mLocationClient = null;
+        googleApiClient = null;
     }
 
     /*

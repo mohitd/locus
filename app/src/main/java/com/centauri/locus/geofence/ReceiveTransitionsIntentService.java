@@ -18,7 +18,7 @@ import com.centauri.locus.R;
 import com.centauri.locus.TaskEditActivity;
 import com.centauri.locus.provider.Locus;
 import com.google.android.gms.location.Geofence;
-import com.google.android.gms.location.LocationClient;
+import com.google.android.gms.location.GeofencingEvent;
 
 import java.util.List;
 
@@ -56,11 +56,13 @@ public class ReceiveTransitionsIntentService extends IntentService {
         // Give it the category for all intents sent by the Intent Service
         broadcastIntent.addCategory(GeofenceUtils.CATEGORY_LOCATION_SERVICES);
 
+        GeofencingEvent event = GeofencingEvent.fromIntent(intent);
+
         // First check for errors
-        if (LocationClient.hasError(intent)) {
+        if (event.hasError()) {
 
             // Get the error code
-            int errorCode = LocationClient.getErrorCode(intent);
+            int errorCode = event.getErrorCode();
 
             // Get the error message
             String errorMessage = String.valueOf(errorCode);
@@ -81,14 +83,14 @@ public class ReceiveTransitionsIntentService extends IntentService {
         } else {
 
             // Get the type of transition (entry or exit)
-            int transition = LocationClient.getGeofenceTransition(intent);
+            int transition = event.getGeofenceTransition();
 
             // Test that a valid transition was reported
             if ((transition == Geofence.GEOFENCE_TRANSITION_ENTER)
                     || (transition == Geofence.GEOFENCE_TRANSITION_EXIT)) {
 
                 // Post a notification
-                List<Geofence> geofences = LocationClient.getTriggeringGeofences(intent);
+                List<Geofence> geofences = event.getTriggeringGeofences();
                 String[] geofenceIds = new String[geofences.size()];
                 for (int index = 0; index < geofences.size(); index++) {
                     geofenceIds[index] = geofences.get(index).getRequestId();

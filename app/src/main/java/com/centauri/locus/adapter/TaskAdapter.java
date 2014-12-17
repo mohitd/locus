@@ -14,10 +14,10 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.centauri.locus.R;
-import com.centauri.locus.dto.GeoPoint;
 import com.centauri.locus.provider.Locus;
 import com.centauri.locus.util.BitmapCache;
 import com.centauri.locus.util.StaticMapsLoader;
+import com.google.android.gms.maps.model.LatLng;
 
 /**
  * @author mohitd2000
@@ -72,7 +72,7 @@ public class TaskAdapter extends CursorAdapter {
         } else {
             StaticMapsLoader task = new StaticMapsLoader(mapImageView, id,
                     StaticMapsLoader.SIZE_SMALL, StaticMapsLoader.TABLE_TASK);
-            task.execute(new GeoPoint(lat, lon));
+            task.execute(new LatLng(lat, lon));
         }
 
     }

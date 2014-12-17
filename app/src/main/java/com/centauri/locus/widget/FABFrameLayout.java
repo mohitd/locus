@@ -2,10 +2,12 @@ package com.centauri.locus.widget;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
+import android.annotation.TargetApi;
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.Outline;
 import android.graphics.drawable.RippleDrawable;
+import android.os.Build;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
@@ -53,6 +55,7 @@ public class FABFrameLayout extends CheckableFrameLayout {
         return super.onTouchEvent(event);
     }
 
+    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     @Override
     protected void onSizeChanged(int w, int h, int oldw, int oldh) {
         super.onSizeChanged(w, h, oldw, oldh);
@@ -66,6 +69,7 @@ public class FABFrameLayout extends CheckableFrameLayout {
         setClipToOutline(true);
     }
 
+    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     @Override
     public void setChecked(boolean checked, boolean allowAnimate) {
         super.setChecked(checked, allowAnimate);

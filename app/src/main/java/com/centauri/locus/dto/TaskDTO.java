@@ -13,6 +13,8 @@ import static com.centauri.locus.provider.Locus.Task.COLUMN_TITLE;
 
 import android.content.ContentValues;
 
+import com.google.android.gms.maps.model.LatLng;
+
 /**
  * @author mohitd2000
  * 
@@ -21,7 +23,7 @@ public class TaskDTO {
 
     private String title;
     private String description;
-    private GeoPoint location;
+    private LatLng location;
     private int radius;
     private String due;
     private boolean completed;
@@ -38,7 +40,7 @@ public class TaskDTO {
      * @param due
      * @param completed
      */
-    public TaskDTO(String title, String description, GeoPoint location, int radius, String due,
+    public TaskDTO(String title, String description, LatLng location, int radius, String due,
             boolean completed) {
         super();
         this.title = title;
@@ -58,7 +60,7 @@ public class TaskDTO {
         String due = values.getAsString(COLUMN_DUE);
         int completed = values.getAsInteger(COLUMN_COMPLETED);
 
-        GeoPoint point = new GeoPoint(lat, lon);
+        LatLng point = new LatLng(lat, lon);
         boolean comp = completed == 0 ? false : true;
 
         return new TaskDTO(title, description, point, radius, due, comp);
@@ -68,8 +70,8 @@ public class TaskDTO {
         ContentValues values = new ContentValues();
         values.put(COLUMN_TITLE, this.title);
         values.put(COLUMN_DESCRIPTION, this.description);
-        values.put(COLUMN_LATITUDE, this.location.getLatitude());
-        values.put(COLUMN_LONGITUDE, this.location.getLongitude());
+        values.put(COLUMN_LATITUDE, this.location.latitude);
+        values.put(COLUMN_LONGITUDE, this.location.longitude);
         values.put(COLUMN_RADIUS, this.radius);
         values.put(COLUMN_DUE, this.due);
         values.put(COLUMN_COMPLETED, this.completed ? 1 : 0);
@@ -110,7 +112,7 @@ public class TaskDTO {
     /**
      * @return the location
      */
-    public GeoPoint getLocation() {
+    public LatLng getLocation() {
         return location;
     }
 
@@ -118,7 +120,7 @@ public class TaskDTO {
      * @param location
      *            the location to set
      */
-    public void setLocation(GeoPoint location) {
+    public void setLocation(LatLng location) {
         this.location = location;
     }
 

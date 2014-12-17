@@ -22,9 +22,10 @@ import android.widget.LinearLayout;
 
 import com.centauri.locus.provider.Locus;
 import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.GooglePlayServicesClient.ConnectionCallbacks;
-import com.google.android.gms.common.GooglePlayServicesClient.OnConnectionFailedListener;
-import com.google.android.gms.location.LocationClient;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.location.LocationListener;
+import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.GoogleMap.OnMapClickListener;
@@ -40,12 +41,13 @@ import com.google.android.gms.maps.model.MarkerOptions;
  * 
  */
 public class GeofenceSelectorActivity extends FragmentActivity implements OnMapClickListener,
-        ConnectionCallbacks, OnConnectionFailedListener {
+        GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, LocationListener {
 
     private static final String TAG = GeofenceSelectorActivity.class.getSimpleName();
 
     private GoogleMap map;
-    private LocationClient locationClient;
+    private GoogleApiClient googleApiClient;
+    private LocationRequest locationRequest;
     private LatLng markerLoc;
     private Marker marker;
     private Circle geofenceCircle;
@@ -60,8 +62,7 @@ public class GeofenceSelectorActivity extends FragmentActivity implements OnMapC
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_geofence_selector);
 
-        locationClient = new LocationClient(this, this, this);
-        locationClient.connect();
+        googleApiClient = new GoogleApiClient.Builder(this).addApi(LocationServices.API).addConnectionCallbacks(this).addOnConnectionFailedListener(this).build();
 
         setupIfNeeded();
         map.setOnMapClickListener(this);
@@ -128,24 +129,27 @@ public class GeofenceSelectorActivity extends FragmentActivity implements OnMapC
 
     }
 
+    @Override
+    public void onConnectionSuspended(int i) {
+
+    }
+
     /**
      * @see com.google.android.gms.common.GooglePlayServicesClient.ConnectionCallbacks#onConnected(android.os.Bundle)
      */
     @Override
     public void onConnected(Bundle dataBundle) {
-        Location loc = locationClient.getLastLocation();
-        LatLng latlon = new LatLng(loc.getLatitude(), loc.getLongitude());
+        locationRequest = LocationRequest.create();
+        locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+        locationRequest.setInterval(5000);
 
-        map.animateCamera(CameraUpdateFactory.newLatLngZoom(latlon, 16.0f));
+        LocationServices.FusedLocationApi.requestLocationUpdates(googleApiClient, locationRequest, this);
     }
 
-    /**
-     * @see com.google.android.gms.common.GooglePlayServicesClient.ConnectionCallbacks#onDisconnected()
-     */
     @Override
-    public void onDisconnected() {
-        // TODO Auto-generated method stub
-
+    public void onLocationChanged(Location location) {
+        LatLng latlon = new LatLng(location.getLatitude(), location.getLongitude());
+        map.animateCamera(CameraUpdateFactory.newLatLngZoom(latlon, 16.0f));
     }
 
     private void newTaskDialog() {
@@ -178,15 +182,15 @@ public class GeofenceSelectorActivity extends FragmentActivity implements OnMapC
                 dialog.dismiss();
             }
         });
-        dialogBuilder.setOnDismissListener(new DialogInterface.OnDismissListener() {
 
+        AlertDialog dialog = dialogBuilder.create();
+        dialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
             @Override
-            public void onDismiss(DialogInterface dialog) {
+            public void onDismiss(DialogInterface dialogInterface) {
                 clearMarkers();
             }
         });
-
-        dialogBuilder.create().show();
+        dialog.show();
     }
 
     private void clearMarkers() {

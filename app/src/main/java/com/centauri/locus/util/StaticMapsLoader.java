@@ -8,7 +8,7 @@ import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.widget.ImageView;
 
-import com.centauri.locus.dto.GeoPoint;
+import com.google.android.gms.maps.model.LatLng;
 
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
@@ -22,7 +22,7 @@ import java.io.InputStream;
  * @author mohitd2000
  * 
  */
-public class StaticMapsLoader extends AsyncTask<GeoPoint, Void, Bitmap> {
+public class StaticMapsLoader extends AsyncTask<LatLng, Void, Bitmap> {
 
     public static final int SIZE_SMALL = 1;
     public static final int SIZE_LARGE = 2;
@@ -44,12 +44,12 @@ public class StaticMapsLoader extends AsyncTask<GeoPoint, Void, Bitmap> {
     }
 
     /**
-     * @see android.os.AsyncTask#doInBackground(Params[])
+     * @see android.os.AsyncTask#doInBackground(Object[])
      */
     @Override
-    protected Bitmap doInBackground(GeoPoint... params) {
-        double lat = params[0].getLatitude();
-        double lon = params[0].getLongitude();
+    protected Bitmap doInBackground(LatLng... params) {
+        double lat = params[0].latitude;
+        double lon = params[0].longitude;
         String baseURL = "http://maps.googleapis.com/maps/api/staticmap?";
         String center = "center=" + lat + "," + lon;
         String size;

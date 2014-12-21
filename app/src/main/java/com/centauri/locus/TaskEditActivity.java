@@ -68,7 +68,7 @@ public class TaskEditActivity extends ActionBarActivity {
 
             TaskEditFragment fragment = new TaskEditFragment();
             fragment.setArguments(bundle);
-            getFragmentManager().beginTransaction().replace(R.id.task_edit_fragment, fragment)
+            getSupportFragmentManager().beginTransaction().replace(R.id.task_edit_fragment, fragment)
                     .commit();
 
             Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);

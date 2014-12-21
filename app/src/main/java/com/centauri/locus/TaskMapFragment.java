@@ -11,13 +11,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.centauri.locus.geofence.GeofenceRemover;
 import com.centauri.locus.geofence.GeofenceRequester;
 import com.centauri.locus.geofence.SimpleGeofence;
 import com.centauri.locus.provider.Locus;
 import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.GooglePlayServicesClient.ConnectionCallbacks;
-import com.google.android.gms.common.GooglePlayServicesClient.OnConnectionFailedListener;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.Geofence;
 import com.google.android.gms.location.LocationListener;
@@ -26,6 +23,7 @@ import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
+import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
@@ -38,7 +36,7 @@ import java.util.List;
  * @author mohitd2000
  * 
  */
-public class TaskMapFragment extends MapFragment implements GoogleApiClient.ConnectionCallbacks,
+public class TaskMapFragment extends SupportMapFragment implements GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener, GoogleMap.OnMarkerClickListener, LocationListener {
 
     private GoogleApiClient googleApiClient;

@@ -1,11 +1,12 @@
 package com.centauri.locus;
 
-import android.app.FragmentManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.graphics.Outline;
 import android.os.Bundle;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
@@ -16,10 +17,13 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewOutlineProvider;
+import android.widget.Button;
 import android.widget.ListView;
 import android.widget.Toast;
 
 import com.centauri.locus.geofence.GeofenceUtils;
+import com.melnykov.fab.FloatingActionButton;
 
 public class MainActivity extends ActionBarActivity implements
         NavigationDrawerFragment.NavigationDrawerCallbacks,
@@ -83,7 +87,7 @@ public class MainActivity extends ActionBarActivity implements
     @Override
     public void onNavigationDrawerItemSelected(int position) {
         // update the main content by replacing fragments
-        FragmentManager fragmentManager = getFragmentManager();
+        FragmentManager fragmentManager = getSupportFragmentManager();
         switch (position) {
         case 0:
             fragmentManager.beginTransaction().replace(R.id.container, new TaskListFragment())

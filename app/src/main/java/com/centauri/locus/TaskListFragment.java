@@ -4,12 +4,12 @@
 package com.centauri.locus;
 
 import android.app.Activity;
-import android.app.ListFragment;
 import android.content.ContentUris;
 import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.v4.app.ListFragment;
 import android.text.Spannable;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
@@ -24,10 +24,12 @@ import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.centauri.locus.adapter.TaskAdapter;
 import com.centauri.locus.geofence.GeofenceRemover;
 import com.centauri.locus.provider.Locus;
+import com.melnykov.fab.FloatingActionButton;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -37,7 +39,7 @@ import java.util.List;
  * 
  */
 public class TaskListFragment extends ListFragment implements AbsListView.MultiChoiceModeListener,
-        OnItemLongClickListener {
+        OnItemLongClickListener, View.OnClickListener {
 
     private static final String TAG = TaskListFragment.class.getSimpleName();
 
@@ -75,28 +77,6 @@ public class TaskListFragment extends ListFragment implements AbsListView.MultiC
         adapter = new TaskAdapter(getActivity(), cursor, 0);
         geofenceRemover = new GeofenceRemover(getActivity());
         setListAdapter(adapter);
-        setHasOptionsMenu(true);
-    }
-
-    /**
-     * @see android.app.Fragment#onCreateOptionsMenu(android.view.Menu,
-     *      android.view.MenuInflater)
-     */
-    @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        super.onCreateOptionsMenu(menu, inflater);
-        inflater.inflate(R.menu.main, menu);
-    }
-
-    /**
-     * @see android.app.Fragment#onOptionsItemSelected(android.view.MenuItem)
-     */
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId() == R.id.action_add) {
-            startActivity(new Intent(getActivity(), GeofenceSelectorActivity.class));
-        }
-        return super.onOptionsItemSelected(item);
     }
 
     /**
@@ -105,6 +85,8 @@ public class TaskListFragment extends ListFragment implements AbsListView.MultiC
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+        FloatingActionButton fab = (FloatingActionButton) getActivity().findViewById(R.id.fab);
+        fab.setOnClickListener(this);
         getListView().setChoiceMode(ListView.CHOICE_MODE_MULTIPLE_MODAL);
         getListView().setMultiChoiceModeListener(this);
         getListView().setOnItemLongClickListener(this);
@@ -145,6 +127,11 @@ public class TaskListFragment extends ListFragment implements AbsListView.MultiC
         if (callbacks != null) {
             callbacks.onListItemClicked(l, v, position, id);
         }
+    }
+
+    @Override
+    public void onClick(View view) {
+        startActivity(new Intent(getActivity(), GeofenceSelectorActivity.class));
     }
 
     /**

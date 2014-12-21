@@ -24,7 +24,7 @@ android {
 }
 
 dependencies {
-    compile project(':datetimepicker')
+    compile 'com.melnykov:floatingactionbutton:1.1.0'
     compile 'com.google.android.gms:play-services:6.5.87'
     compile 'com.android.support:support-v13:21.0.3'
     compile 'com.android.support:appcompat-v7:21.0.3'

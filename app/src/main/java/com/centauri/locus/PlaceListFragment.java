@@ -3,9 +3,9 @@
  */
 package com.centauri.locus;
 
-import android.app.ListFragment;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.support.v4.app.ListFragment;
 
 import com.centauri.locus.adapter.PlaceAdapter;
 import com.centauri.locus.provider.Locus;

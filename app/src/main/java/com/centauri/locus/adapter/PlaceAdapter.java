@@ -49,7 +49,7 @@ public class PlaceAdapter extends CursorAdapter {
     public View newView(Context context, Cursor cursor, ViewGroup parent) {
         LayoutInflater inflater = (LayoutInflater) context
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        return inflater.inflate(R.layout.list_item_task_no_description, parent, false);
+        return inflater.inflate(R.layout.list_item_task, parent, false);
     }
 
     /**

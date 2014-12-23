@@ -35,6 +35,9 @@
             android:name="com.centauri.locus.TaskEditActivity"
             android:parentActivityName=".MainActivity" />
         <activity
+            android:name="com.centauri.locus.TaskViewActivity"
+            android:parentActivityName=".MainActivity" />
+        <activity
             android:name=".SettingsActivity"
             android:parentActivityName=".MainActivity"/>
 

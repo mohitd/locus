@@ -10,13 +10,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CursorAdapter;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.centauri.locus.R;
 import com.centauri.locus.provider.Locus;
 import com.centauri.locus.util.BitmapCache;
 import com.centauri.locus.util.StaticMapsLoader;
+import com.centauri.locus.widget.CircularImageView;
 import com.google.android.gms.maps.model.LatLng;
 
 /**
@@ -44,7 +44,7 @@ public class TaskAdapter extends CursorAdapter {
     public View newView(Context context, Cursor cursor, ViewGroup parent) {
         LayoutInflater inflater = (LayoutInflater) context
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        View view = inflater.inflate(R.layout.list_item_task_no_description, parent, false);
+        View view = inflater.inflate(R.layout.list_item_task, parent, false);
 
         return view;
     }
@@ -61,7 +61,7 @@ public class TaskAdapter extends CursorAdapter {
         double lon = cursor.getDouble(cursor.getColumnIndex(Locus.Task.COLUMN_LONGITUDE));
 
         TextView titleTextView = (TextView) view.findViewById(R.id.title_textview);
-        ImageView mapImageView = (ImageView) view.findViewById(R.id.location_imageview);
+        CircularImageView mapImageView = (CircularImageView) view.findViewById(R.id.location_imageview);
 
         titleTextView.setText(title);
 

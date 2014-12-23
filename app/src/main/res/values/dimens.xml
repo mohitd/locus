@@ -22,4 +22,11 @@
     <dimen name="keyline_1">16dp</dimen>
     <dimen name="keyline_2">72dp</dimen>
 
+    <dimen name="circularimageview_diameter">40dp</dimen>
+    <dimen name="circularimageview_margin">8dp</dimen>
+
+    <dimen name="listview_item_height">72dp</dimen>
+
+    <dimen name="toolbar_tall_height">128dp</dimen>
+
 </resources>

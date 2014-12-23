@@ -3,8 +3,6 @@
  */
 package com.centauri.locus;
 
-import android.app.ActionBar;
-import android.app.Activity;
 import android.content.ContentUris;
 import android.content.ContentValues;
 import android.database.Cursor;
@@ -31,7 +29,7 @@ public class TaskEditActivity extends ActionBarActivity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_edit);
+        setContentView(R.layout.activity_task_edit);
 
         if (getIntent().getAction() != null) {
 

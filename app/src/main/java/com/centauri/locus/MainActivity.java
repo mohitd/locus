@@ -161,7 +161,7 @@ public class MainActivity extends ActionBarActivity implements
      */
     @Override
     public void onListItemClicked(ListView listView, View view, int position, long id) {
-        Intent intent = new Intent(this, TaskEditActivity.class);
+        Intent intent = new Intent(this, TaskViewActivity.class);
         intent.putExtra(KEY_TASK_ID, id);
         startActivity(intent);
     }

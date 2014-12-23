@@ -1,6 +1,87 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-</LinearLayout>
+    <ImageView
+        android:id="@+id/datetimeImageView"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:layout_alignParentLeft="true"
+        android:layout_marginLeft="@dimen/keyline_1"
+        android:layout_marginTop="48dp"
+        android:contentDescription="@string/date_time"
+        android:src="@drawable/ic_datetime"/>
+
+    <TextView
+        style="@style/Base.TextAppearance.AppCompat.Body1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_marginLeft="@dimen/keyline_2"
+        android:layout_marginTop="48dp"
+        android:layout_toRightOf="@+id/timeButton"
+        android:padding="4dp"
+        android:background="?attr/selectableItemBackground"
+        android:text="Sunday, Dec 21, 2014"/>
+
+    <TextView
+        style="@style/Base.TextAppearance.AppCompat.Body1"
+        android:id="@+id/timeButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="@dimen/keyline_1"
+        android:layout_marginTop="48dp"
+        android:padding="4dp"
+        android:background="?attr/selectableItemBackground"
+        android:text="10:30 AM"/>
+
+    <ImageView
+        android:id="@+id/placeImageView"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/datetimeImageView"
+        android:layout_marginLeft="@dimen/keyline_1"
+        android:layout_marginTop="32dp"
+        android:contentDescription="@string/date_time"
+        android:src="@drawable/ic_place"/>
+
+    <TextView
+        style="@style/Base.TextAppearance.AppCompat.Body1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/datetimeImageView"
+        android:layout_marginLeft="@dimen/keyline_2"
+        android:layout_marginTop="32dp"
+        android:layout_toRightOf="@+id/placeImageView"
+        android:padding="4dp"
+        android:background="?attr/selectableItemBackground"
+        android:text="1 Hacker Way, Menlo Park, CA 94025"/>
+
+    <ImageView
+        android:id="@+id/notesImageView"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/placeImageView"
+        android:layout_marginLeft="@dimen/keyline_1"
+        android:layout_marginTop="32dp"
+        android:contentDescription="@string/date_time"
+        android:src="@drawable/ic_notes"/>
+
+    <TextView
+        style="@style/Base.TextAppearance.AppCompat.Body1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/placeImageView"
+        android:layout_marginLeft="@dimen/keyline_2"
+        android:layout_marginTop="32dp"
+        android:layout_toRightOf="@+id/notesImageView"
+        android:background="?attr/selectableItemBackground"
+        android:text="Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna wirl"/>
+
+</RelativeLayout>

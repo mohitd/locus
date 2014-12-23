@@ -28,5 +28,6 @@
     <dimen name="listview_item_height">72dp</dimen>
 
     <dimen name="toolbar_tall_height">128dp</dimen>
+    <dimen name="fab_mini_margin_minus">-17dp</dimen>
 
 </resources>

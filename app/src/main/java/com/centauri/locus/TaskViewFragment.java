@@ -5,12 +5,17 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.TextView;
 
 import com.centauri.locus.provider.Locus;
+
+import java.util.Calendar;
+import java.util.Locale;
 
 /**
  * Created by mohitd2000 on 12/23/14.
@@ -64,9 +69,61 @@ public class TaskViewFragment extends Fragment {
             long due = taskCursor.getLong(taskCursor.getColumnIndexOrThrow(Locus.Task.COLUMN_DUE));
             taskCursor.close();
 
-            EditText titleEditText = (EditText) getActivity().findViewById(R.id.titleEditText);
-            EditText descEditText = (EditText) getActivity().findViewById(R.id.descriptionEditText);
+            TextView dateTextView = (TextView) getActivity().findViewById(R.id.dateTextView);
+            TextView timeTextView = (TextView) getActivity().findViewById(R.id.timeTextView);
+            TextView locationTextView = (TextView) getActivity().findViewById(R.id.locationTextView);
+            TextView descriptionTextView = (TextView) getActivity().findViewById(R.id.descriptionTextView);
+            Toolbar toolbar = (Toolbar) getActivity().findViewById(R.id.toolbar);
 
+            dateTextView.setText(getDate(due));
+            timeTextView.setText(getTime(due));
+            descriptionTextView.setText(taskDescription);
+            toolbar.setTitle(taskTitle);
+        }
+    }
+
+    private String getDate(long millis) {
+        StringBuilder builder = new StringBuilder();
+        Calendar cal = Calendar.getInstance(Locale.getDefault());
+        cal.setTimeInMillis(millis);
+        builder.append(getDayOfWeek(cal.get(Calendar.DAY_OF_WEEK)) + ", ");
+        builder.append(cal.getDisplayName(Calendar.MONTH, Calendar.SHORT, Locale.getDefault()) + " ");
+        builder.append(cal.get(Calendar.DAY_OF_WEEK) + ", ");
+        builder.append(cal.get(Calendar.YEAR));
+        return builder.toString();
+    }
+
+    private String getTime(long millis) {
+        StringBuilder builder = new StringBuilder();
+        Calendar cal = Calendar.getInstance(Locale.getDefault());
+        cal.setTimeInMillis(millis);
+        builder.append(cal.get(Calendar.HOUR) + ":");
+        if (cal.get(Calendar.MINUTE) == 0) builder.append("00 ");
+        else builder.append(cal.get(Calendar.MINUTE) + " ");
+
+        if (cal.get(Calendar.AM_PM) == 1) builder.append("AM");
+        else builder.append("PM");
+        return builder.toString();
+    }
+
+    private String getDayOfWeek(int constant) {
+        switch (constant) {
+            case Calendar.SUNDAY:
+                return "Sunday";
+            case Calendar.MONDAY:
+                return "Monday";
+            case Calendar.TUESDAY:
+                return "Tuesday";
+            case Calendar.WEDNESDAY:
+                return "Wednesday";
+            case Calendar.THURSDAY:
+                return "Thursday";
+            case Calendar.FRIDAY:
+                return "Friday";
+            case Calendar.SATURDAY:
+                return "Saturday";
+            default:
+                return "";
         }
     }
 

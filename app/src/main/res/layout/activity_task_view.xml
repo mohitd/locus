@@ -22,6 +22,7 @@
         android:layout_marginLeft="@dimen/keyline_1"
         android:src="@drawable/ic_action_create"
         app:fab_type="mini"
-        app:fab_colorNormal="@color/accent"/>
+        app:fab_colorNormal="@color/accent"
+        app:fab_colorPressed="@color/accent_light"/>
 
 </RelativeLayout>

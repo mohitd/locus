@@ -61,7 +61,7 @@
         android:layout_toRightOf="@+id/placeImageView"
         android:padding="4dp"
         android:background="?attr/selectableItemBackground"
-        android:text="1 Hacker Way, Menlo Park, CA 94025"/>
+        android:text="No location found."/>
 
     <ImageView
         android:id="@+id/notesImageView"
@@ -85,6 +85,6 @@
         android:layout_marginTop="32dp"
         android:layout_toRightOf="@+id/notesImageView"
         android:background="?attr/selectableItemBackground"
-        android:text="Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna wirl"/>
+        android:text="No description."/>
 
 </RelativeLayout>

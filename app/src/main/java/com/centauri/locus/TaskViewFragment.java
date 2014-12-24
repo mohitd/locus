@@ -2,6 +2,8 @@ package com.centauri.locus;
 
 import android.content.ContentUris;
 import android.database.Cursor;
+import android.location.Address;
+import android.location.Geocoder;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -9,12 +11,15 @@ import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.centauri.locus.provider.Locus;
 
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.List;
 import java.util.Locale;
 
 /**
@@ -24,7 +29,8 @@ public class TaskViewFragment extends Fragment {
 
     private static final String TAG = TaskEditFragment.class.getSimpleName();
     private static final String[] PROJECTION = { Locus.Task._ID, Locus.Task.COLUMN_TITLE,
-            Locus.Task.COLUMN_DESCRIPTION, Locus.Task.COLUMN_DUE };
+            Locus.Task.COLUMN_DESCRIPTION, Locus.Task.COLUMN_LATITUDE, Locus.Task.COLUMN_LONGITUDE,
+            Locus.Task.COLUMN_DUE };
 
     private Cursor taskCursor;
     private Uri taskUri;
@@ -67,7 +73,30 @@ public class TaskViewFragment extends Fragment {
             String taskDescription = taskCursor.getString(taskCursor
                     .getColumnIndexOrThrow(Locus.Task.COLUMN_DESCRIPTION));
             long due = taskCursor.getLong(taskCursor.getColumnIndexOrThrow(Locus.Task.COLUMN_DUE));
+            long lat = taskCursor.getLong(taskCursor.getColumnIndexOrThrow(Locus.Task.COLUMN_LATITUDE));
+            long lon = taskCursor.getLong(taskCursor.getColumnIndexOrThrow(Locus.Task.COLUMN_LONGITUDE));
             taskCursor.close();
+
+            String locationText = "No location.";
+            Geocoder geocoder = new Geocoder(getActivity(), Locale.getDefault());
+            List<Address> addresses = new ArrayList<Address>(0);
+            try {
+                addresses = geocoder.getFromLocation(lat, lon, 1);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            if (!addresses.isEmpty()) {
+                Address address = addresses.get(0);
+                locationText = String.format(
+                        "%s, %s",
+                        // If there's a street address, add it
+                        address.getMaxAddressLineIndex() > 0 ?
+                                address.getAddressLine(0) : "",
+                        // Locality is usually a city
+                        address.getMaxAddressLineIndex() > 0 ?
+                                address.getAddressLine(1) : "");
+            }
 
             TextView dateTextView = (TextView) getActivity().findViewById(R.id.dateTextView);
             TextView timeTextView = (TextView) getActivity().findViewById(R.id.timeTextView);
@@ -77,7 +106,8 @@ public class TaskViewFragment extends Fragment {
 
             dateTextView.setText(getDate(due));
             timeTextView.setText(getTime(due));
-            descriptionTextView.setText(taskDescription);
+            locationTextView.setText(locationText);
+            if (!taskDescription.isEmpty()) descriptionTextView.setText(taskDescription);
             toolbar.setTitle(taskTitle);
         }
     }

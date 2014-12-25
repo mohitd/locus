@@ -95,11 +95,6 @@ public class TaskEditFragment extends Fragment implements OnClickListener,
         switch (item.getItemId()) {
         case R.id.menu_save:
             saveData();
-            getActivity().finish();
-            break;
-
-        case R.id.menu_check:
-            saveData();
             ContentValues values = new ContentValues();
             values.put(Locus.Task.COLUMN_COMPLETED, 1);
             getActivity().getContentResolver().update(taskUri, values, null, null);

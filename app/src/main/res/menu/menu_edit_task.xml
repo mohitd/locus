@@ -4,13 +4,7 @@
 
     <item
         android:id="@+id/menu_save"
-        android:icon="@drawable/ic_action_save"
-        app:showAsAction="ifRoom"
+        app:showAsAction="always"
         android:title="Save"/>
-    <item
-        android:id="@+id/menu_check"
-        android:icon="@drawable/ic_action_accept"
-        app:showAsAction="ifRoom"
-        android:title="Check"/>
 
 </menu>

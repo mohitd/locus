@@ -9,9 +9,13 @@ import android.app.TimePickerDialog;
 import android.content.ContentUris;
 import android.content.ContentValues;
 import android.database.Cursor;
+import android.location.Address;
+import android.location.Geocoder;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.ActionBarActivity;
+import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -27,8 +31,11 @@ import android.widget.TimePicker;
 
 import com.centauri.locus.provider.Locus;
 
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
+import java.util.List;
 import java.util.Locale;
 import java.util.TimeZone;
 
@@ -41,6 +48,7 @@ public class TaskEditFragment extends Fragment implements OnClickListener,
         TimePickerDialog.OnTimeSetListener {
     private static final String TAG = TaskEditFragment.class.getSimpleName();
     private static final String[] PROJECTION = { Locus.Task._ID, Locus.Task.COLUMN_TITLE,
+        Locus.Task.COLUMN_LATITUDE, Locus.Task.COLUMN_LONGITUDE,
         Locus.Task.COLUMN_DESCRIPTION, Locus.Task.COLUMN_DUE };
 
     private Cursor taskCursor;
@@ -119,8 +127,6 @@ public class TaskEditFragment extends Fragment implements OnClickListener,
         dateTextView.setOnClickListener(this);
         timeTextView.setOnClickListener(this);
 
-        ((ImageButton) view.findViewById(R.id.clearButton)).setOnClickListener(this);
-
         return view;
     }
 
@@ -137,31 +143,48 @@ public class TaskEditFragment extends Fragment implements OnClickListener,
             String taskDescription = taskCursor.getString(taskCursor
                     .getColumnIndexOrThrow(Locus.Task.COLUMN_DESCRIPTION));
             long due = taskCursor.getLong(taskCursor.getColumnIndexOrThrow(Locus.Task.COLUMN_DUE));
+            long lat = taskCursor.getLong(taskCursor.getColumnIndexOrThrow(Locus.Task.COLUMN_LATITUDE));
+            long lon = taskCursor.getLong(taskCursor.getColumnIndexOrThrow(Locus.Task.COLUMN_LONGITUDE));
             taskCursor.close();
+
+            String locationText = "No location.";
+            Geocoder geocoder = new Geocoder(getActivity(), Locale.getDefault());
+            List<Address> addresses = new ArrayList<Address>(0);
+            try {
+                addresses = geocoder.getFromLocation(lat, lon, 1);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            if (!addresses.isEmpty()) {
+                Address address = addresses.get(0);
+                locationText = String.format(
+                        "%s, %s",
+                        // If there's a street address, add it
+                        address.getMaxAddressLineIndex() > 0 ?
+                                address.getAddressLine(0) : "",
+                        // Locality is usually a city
+                        address.getMaxAddressLineIndex() > 0 ?
+                                address.getAddressLine(1) : "");
+            }
 
             EditText titleEditText = (EditText) getActivity().findViewById(R.id.titleEditText);
             EditText descEditText = (EditText) getActivity().findViewById(R.id.descriptionEditText);
+            TextView locationTextView = (TextView) getActivity().findViewById(R.id.locationTextView);
 
-            TimeZone tz = TimeZone.getDefault();
-            Calendar cal = new GregorianCalendar(tz);
-            cal.setTimeInMillis(due);
-
-            hour = cal.get(Calendar.HOUR_OF_DAY);
-            day = cal.get(Calendar.DATE);
-            year = cal.get(Calendar.YEAR);
-
-            String AMPM = hour <= 12 ? "AM" : "PM";
-            int hourTime = hour <= 12 ? hour : hour - 12;
-            String dayName = cal.getDisplayName(Calendar.DAY_OF_WEEK, Calendar.SHORT,
-                    Locale.getDefault());
-            String month = cal.getDisplayName(Calendar.MONTH, Calendar.SHORT, Locale.getDefault());
-
-            timeTextView.setText(hourTime + ":" + String.format("%02d", minute) + " " + AMPM);
-            dateTextView.setText(dayName + ", " + month + " " + day + ", " + year);
+            timeTextView.setText(getTime(due));
+            dateTextView.setText(getDate(due));
+            locationTextView.setText(locationText);
 
             titleEditText.setText(taskTitle);
             descEditText.setText(taskDescription);
         }
+
+        // So apparently you can only use getSupportActionBar() immediately after setSupportActionBar()???
+        Toolbar toolbar = (Toolbar) getActivity().findViewById(R.id.toolbar);
+        toolbar.setTitle("Edit Task");
+        ((ActionBarActivity) getActivity()).setSupportActionBar(toolbar);
+        ((ActionBarActivity) getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
 
     /**
@@ -234,5 +257,50 @@ public class TaskEditFragment extends Fragment implements OnClickListener,
         int hour = hourOfDay <= 12 ? hourOfDay : hourOfDay - 12;
 
         timeTextView.setText(hour + ":" + String.format("%02d", minute) + " " + AMPM);
+    }
+
+    private String getDate(long millis) {
+        StringBuilder builder = new StringBuilder();
+        Calendar cal = Calendar.getInstance(Locale.getDefault());
+        cal.setTimeInMillis(millis);
+        builder.append(getDayOfWeek(cal.get(Calendar.DAY_OF_WEEK)) + ", ");
+        builder.append(cal.getDisplayName(Calendar.MONTH, Calendar.SHORT, Locale.getDefault()) + " ");
+        builder.append(cal.get(Calendar.DAY_OF_WEEK) + ", ");
+        builder.append(cal.get(Calendar.YEAR));
+        return builder.toString();
+    }
+
+    private String getTime(long millis) {
+        StringBuilder builder = new StringBuilder();
+        Calendar cal = Calendar.getInstance(Locale.getDefault());
+        cal.setTimeInMillis(millis);
+        builder.append(cal.get(Calendar.HOUR) + ":");
+        if (cal.get(Calendar.MINUTE) == 0) builder.append("00 ");
+        else builder.append(cal.get(Calendar.MINUTE) + " ");
+
+        if (cal.get(Calendar.AM_PM) == 1) builder.append("AM");
+        else builder.append("PM");
+        return builder.toString();
+    }
+
+    private String getDayOfWeek(int constant) {
+        switch (constant) {
+            case Calendar.SUNDAY:
+                return "Sunday";
+            case Calendar.MONDAY:
+                return "Monday";
+            case Calendar.TUESDAY:
+                return "Tuesday";
+            case Calendar.WEDNESDAY:
+                return "Wednesday";
+            case Calendar.THURSDAY:
+                return "Thursday";
+            case Calendar.FRIDAY:
+                return "Friday";
+            case Calendar.SATURDAY:
+                return "Saturday";
+            default:
+                return "";
+        }
     }
 }

@@ -71,7 +71,6 @@ public class TaskEditActivity extends ActionBarActivity {
 
             Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
             setSupportActionBar(toolbar);
-            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         }
     }
 

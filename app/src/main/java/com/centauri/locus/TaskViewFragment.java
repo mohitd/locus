@@ -11,6 +11,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -100,14 +101,14 @@ public class TaskViewFragment extends Fragment {
 
             TextView dateTextView = (TextView) getActivity().findViewById(R.id.dateTextView);
             TextView timeTextView = (TextView) getActivity().findViewById(R.id.timeTextView);
-            TextView locationTextView = (TextView) getActivity().findViewById(R.id.locationTextView);
-            TextView descriptionTextView = (TextView) getActivity().findViewById(R.id.descriptionTextView);
+            TextView locationEditText = (TextView) getActivity().findViewById(R.id.locationEditText);
+            TextView descriptionEditText = (TextView) getActivity().findViewById(R.id.descriptionEditText);
             Toolbar toolbar = (Toolbar) getActivity().findViewById(R.id.toolbar);
 
             dateTextView.setText(getDate(due));
             timeTextView.setText(getTime(due));
-            locationTextView.setText(locationText);
-            if (!taskDescription.isEmpty()) descriptionTextView.setText(taskDescription);
+            locationEditText.setText(locationText);
+            if (!taskDescription.isEmpty()) descriptionEditText.setText(taskDescription);
             toolbar.setTitle(taskTitle);
         }
     }

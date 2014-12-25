@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_width="match_parent"
     android:layout_height="match_parent">
 
     <ImageView
@@ -22,7 +22,6 @@
         android:layout_marginLeft="@dimen/keyline_2"
         android:layout_marginTop="48dp"
         android:layout_toRightOf="@+id/timeTextView"
-        android:padding="4dp"
         android:background="?attr/selectableItemBackground"
         android:text="Sunday, Dec 21, 2014"/>
 
@@ -51,7 +50,7 @@
 
     <TextView
         style="@style/Base.TextAppearance.AppCompat.Body1"
-        android:id="@+id/locationTextView"
+        android:id="@+id/locationEditText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
@@ -59,9 +58,9 @@
         android:layout_marginLeft="@dimen/keyline_2"
         android:layout_marginTop="32dp"
         android:layout_toRightOf="@+id/placeImageView"
-        android:padding="4dp"
-        android:background="?attr/selectableItemBackground"
-        android:text="No location found."/>
+        android:layout_marginRight="@dimen/keyline_1"
+        android:background="@android:color/transparent"
+        android:text="No location found"/>
 
     <ImageView
         android:id="@+id/notesImageView"
@@ -76,15 +75,16 @@
 
     <TextView
         style="@style/Base.TextAppearance.AppCompat.Body1"
-        android:id="@+id/descriptionTextView"
+        android:id="@+id/descriptionEditText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:layout_below="@+id/placeImageView"
         android:layout_marginLeft="@dimen/keyline_2"
         android:layout_marginTop="32dp"
+        android:layout_marginRight="@dimen/keyline_1"
         android:layout_toRightOf="@+id/notesImageView"
-        android:background="?attr/selectableItemBackground"
-        android:text="No description."/>
+        android:background="@android:color/transparent"
+        android:text="No description"/>
 
 </RelativeLayout>

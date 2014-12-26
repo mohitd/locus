@@ -119,7 +119,7 @@ public class TaskViewFragment extends Fragment {
         cal.setTimeInMillis(millis);
         builder.append(getDayOfWeek(cal.get(Calendar.DAY_OF_WEEK)) + ", ");
         builder.append(cal.getDisplayName(Calendar.MONTH, Calendar.SHORT, Locale.getDefault()) + " ");
-        builder.append(cal.get(Calendar.DAY_OF_WEEK) + ", ");
+        builder.append(cal.get(Calendar.DAY_OF_MONTH) + ", ");
         builder.append(cal.get(Calendar.YEAR));
         return builder.toString();
     }
@@ -129,10 +129,11 @@ public class TaskViewFragment extends Fragment {
         Calendar cal = Calendar.getInstance(Locale.getDefault());
         cal.setTimeInMillis(millis);
         builder.append(cal.get(Calendar.HOUR) + ":");
+
         if (cal.get(Calendar.MINUTE) == 0) builder.append("00 ");
         else builder.append(cal.get(Calendar.MINUTE) + " ");
 
-        if (cal.get(Calendar.AM_PM) == 1) builder.append("AM");
+        if (cal.get(Calendar.AM_PM) == 0) builder.append("AM");
         else builder.append("PM");
         return builder.toString();
     }

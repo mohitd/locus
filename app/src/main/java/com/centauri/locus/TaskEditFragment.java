@@ -8,6 +8,7 @@ import android.app.FragmentManager;
 import android.app.TimePickerDialog;
 import android.content.ContentUris;
 import android.content.ContentValues;
+import android.content.Intent;
 import android.database.Cursor;
 import android.location.Address;
 import android.location.Geocoder;
@@ -58,6 +59,7 @@ public class TaskEditFragment extends Fragment implements OnClickListener,
     private EditText descEditText;
     private TextView dateTextView;
     private TextView timeTextView;
+    private TextView locationTextView;
 
     private int hour = 0, minute = 0, year = 0, month = 0, day = 0;
 
@@ -93,11 +95,13 @@ public class TaskEditFragment extends Fragment implements OnClickListener,
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
+        case android.R.id.home:
         case R.id.menu_save:
             saveData();
-            ContentValues values = new ContentValues();
-            values.put(Locus.Task.COLUMN_COMPLETED, 1);
-            getActivity().getContentResolver().update(taskUri, values, null, null);
+            Intent intent = new Intent(getActivity(), TaskViewActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            intent.putExtras(getArguments());
+            startActivity(intent);
             getActivity().finish();
             break;
         default:
@@ -116,6 +120,7 @@ public class TaskEditFragment extends Fragment implements OnClickListener,
 
         dateTextView = (TextView) view.findViewById(R.id.dateTextView);
         timeTextView = (TextView) view.findViewById(R.id.timeTextView);
+        locationTextView = (TextView) view.findViewById(R.id.locationTextView);
         titleEditText = (EditText) view.findViewById(R.id.titleEditText);
         descEditText = (EditText) view.findViewById(R.id.descriptionEditText);
 
@@ -142,6 +147,14 @@ public class TaskEditFragment extends Fragment implements OnClickListener,
             long lon = taskCursor.getLong(taskCursor.getColumnIndexOrThrow(Locus.Task.COLUMN_LONGITUDE));
             taskCursor.close();
 
+            Calendar cal = Calendar.getInstance(Locale.getDefault());
+            cal.setTimeInMillis(due);
+            this.year = cal.get(Calendar.YEAR);
+            this.month = cal.get(Calendar.MONTH);
+            this.day = cal.get(Calendar.DAY_OF_MONTH);
+            this.hour = cal.get(Calendar.HOUR_OF_DAY);
+            this.minute = cal.get(Calendar.MINUTE);
+
             String locationText = "No location.";
             Geocoder geocoder = new Geocoder(getActivity(), Locale.getDefault());
             List<Address> addresses = new ArrayList<Address>(0);
@@ -153,8 +166,7 @@ public class TaskEditFragment extends Fragment implements OnClickListener,
 
             if (!addresses.isEmpty()) {
                 Address address = addresses.get(0);
-                locationText = String.format(
-                        "%s, %s",
+                locationText = String.format("%s, %s",
                         // If there's a street address, add it
                         address.getMaxAddressLineIndex() > 0 ?
                                 address.getAddressLine(0) : "",
@@ -162,10 +174,6 @@ public class TaskEditFragment extends Fragment implements OnClickListener,
                         address.getMaxAddressLineIndex() > 0 ?
                                 address.getAddressLine(1) : "");
             }
-
-            EditText titleEditText = (EditText) getActivity().findViewById(R.id.titleEditText);
-            EditText descEditText = (EditText) getActivity().findViewById(R.id.descriptionEditText);
-            TextView locationTextView = (TextView) getActivity().findViewById(R.id.locationTextView);
 
             timeTextView.setText(getTime(due));
             dateTextView.setText(getDate(due));
@@ -187,17 +195,12 @@ public class TaskEditFragment extends Fragment implements OnClickListener,
      */
     @Override
     public void onClick(View view) {
-
-
         if (view.getId() == R.id.dateTextView) {
             DatePickerDialog dateDialog = new DatePickerDialog(getActivity(), this, this.year, this.month, this.day);
             dateDialog.show();
         } else if (view.getId() == R.id.timeTextView) {
             TimePickerDialog timeDialog = new TimePickerDialog(getActivity(), this, this.hour, this.minute, false);
             timeDialog.show();
-        } else {
-            dateTextView.setText("Set date");
-            timeTextView.setText("Off");
         }
     }
 
@@ -215,8 +218,7 @@ public class TaskEditFragment extends Fragment implements OnClickListener,
         String title = titleEditText.getText().toString();
         String desc = descEditText.getText().toString();
 
-        TimeZone tz = TimeZone.getDefault();
-        Calendar cal = new GregorianCalendar(tz);
+        Calendar cal = Calendar.getInstance(Locale.getDefault());
         cal.set(year, month, day, hour, minute);
 
         ContentValues values = new ContentValues();
@@ -233,14 +235,9 @@ public class TaskEditFragment extends Fragment implements OnClickListener,
         this.month = monthOfYear;
         this.day = dayOfMonth;
 
-        TimeZone tz = TimeZone.getDefault();
-        Calendar cal = new GregorianCalendar(tz);
+        Calendar cal = Calendar.getInstance(Locale.getDefault());
         cal.set(year, monthOfYear, dayOfMonth);
-
-        String day = cal.getDisplayName(Calendar.DAY_OF_WEEK, Calendar.SHORT, Locale.getDefault());
-        String month = cal.getDisplayName(Calendar.MONTH, Calendar.SHORT, Locale.getDefault());
-
-        dateTextView.setText(day + ", " + month + " " + dayOfMonth + ", " + year);
+        dateTextView.setText(getDate(cal.getTimeInMillis()));
     }
 
     @Override
@@ -248,10 +245,9 @@ public class TaskEditFragment extends Fragment implements OnClickListener,
         this.hour = hourOfDay;
         this.minute = minute;
 
-        String AMPM = hourOfDay <= 12 ? "AM" : "PM";
-        int hour = hourOfDay <= 12 ? hourOfDay : hourOfDay - 12;
-
-        timeTextView.setText(hour + ":" + String.format("%02d", minute) + " " + AMPM);
+        Calendar cal = Calendar.getInstance(Locale.getDefault());
+        cal.set(this.year, this.month, this.day, hourOfDay, minute);
+        timeTextView.setText(getTime(cal.getTimeInMillis()));
     }
 
     private String getDate(long millis) {
@@ -260,7 +256,7 @@ public class TaskEditFragment extends Fragment implements OnClickListener,
         cal.setTimeInMillis(millis);
         builder.append(getDayOfWeek(cal.get(Calendar.DAY_OF_WEEK)) + ", ");
         builder.append(cal.getDisplayName(Calendar.MONTH, Calendar.SHORT, Locale.getDefault()) + " ");
-        builder.append(cal.get(Calendar.DAY_OF_WEEK) + ", ");
+        builder.append(cal.get(Calendar.DAY_OF_MONTH) + ", ");
         builder.append(cal.get(Calendar.YEAR));
         return builder.toString();
     }
@@ -270,10 +266,11 @@ public class TaskEditFragment extends Fragment implements OnClickListener,
         Calendar cal = Calendar.getInstance(Locale.getDefault());
         cal.setTimeInMillis(millis);
         builder.append(cal.get(Calendar.HOUR) + ":");
+
         if (cal.get(Calendar.MINUTE) == 0) builder.append("00 ");
         else builder.append(cal.get(Calendar.MINUTE) + " ");
 
-        if (cal.get(Calendar.AM_PM) == 1) builder.append("AM");
+        if (cal.get(Calendar.AM_PM) == 0) builder.append("AM");
         else builder.append("PM");
         return builder.toString();
     }

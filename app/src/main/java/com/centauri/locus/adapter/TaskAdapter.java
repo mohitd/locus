@@ -3,12 +3,16 @@
  */
 package com.centauri.locus.adapter;
 
+import android.content.ContentUris;
+import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.graphics.Bitmap;
+import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CheckBox;
 import android.widget.CursorAdapter;
 import android.widget.TextView;
 
@@ -54,16 +58,31 @@ public class TaskAdapter extends CursorAdapter {
      *      android.content.Context, android.database.Cursor)
      */
     @Override
-    public void bindView(View view, Context context, Cursor cursor) {
-        int id = cursor.getInt(cursor.getColumnIndex(Locus.Task._ID));
+    public void bindView(View view, final Context context, Cursor cursor) {
+        final int id = cursor.getInt(cursor.getColumnIndex(Locus.Task._ID));
         String title = cursor.getString(cursor.getColumnIndex(Locus.Task.COLUMN_TITLE));
         double lat = cursor.getDouble(cursor.getColumnIndex(Locus.Task.COLUMN_LATITUDE));
         double lon = cursor.getDouble(cursor.getColumnIndex(Locus.Task.COLUMN_LONGITUDE));
+        int completed = cursor.getInt(cursor.getColumnIndexOrThrow(Locus.Task.COLUMN_COMPLETED));
 
         TextView titleTextView = (TextView) view.findViewById(R.id.title_textview);
         CircularImageView mapImageView = (CircularImageView) view.findViewById(R.id.location_imageview);
+        CheckBox checkBox = (CheckBox) view.findViewById(R.id.checkbox);
+
+        checkBox.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                CheckBox completed = (CheckBox) view;
+                int selected = completed.isChecked() ? 1 : 0;
+                Uri uri = ContentUris.withAppendedId(Locus.Task.CONTENT_URI, id);
+                ContentValues values = new ContentValues();
+                values.put(Locus.Task.COLUMN_COMPLETED, selected);
+                context.getContentResolver().update(uri, values, null, null);
+            }
+        });
 
         titleTextView.setText(title);
+        checkBox.setChecked(completed == 1);
 
         String key = 't' + 's' + String.valueOf(id);
         Bitmap image = cache.getBitmapFromCache(key);

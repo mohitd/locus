@@ -42,9 +42,12 @@ public class NavDrawerAdapter extends ArrayAdapter<String> {
                 icon = context.getResources().getDrawable(R.drawable.ic_drawer_inbox);
                 break;
             case 1:
-                icon = context.getResources().getDrawable(R.drawable.ic_drawer_map);
+                icon = context.getResources().getDrawable(R.drawable.ic_drawer_completed);
                 break;
             case 2:
+                icon = context.getResources().getDrawable(R.drawable.ic_drawer_map);
+                break;
+            case 3:
                 icon = context.getResources().getDrawable(R.drawable.ic_drawer_places);
                 break;
             default:

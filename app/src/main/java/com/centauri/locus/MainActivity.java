@@ -30,6 +30,7 @@ public class MainActivity extends ActionBarActivity implements
         TaskListFragment.OnListItemClickedCallback {
 
     public static final String KEY_TASK_ID = "task_id";
+    public static final String KEY_COMPLETED = "completed";
 
     /**
      * Fragment managing the behaviors, interactions and presentation of the
@@ -90,36 +91,26 @@ public class MainActivity extends ActionBarActivity implements
         FragmentManager fragmentManager = getSupportFragmentManager();
         switch (position) {
         case 0:
-            fragmentManager.beginTransaction().replace(R.id.container, new TaskListFragment())
-                    .commit();
+            TaskListFragment fragment = new TaskListFragment();
+            Bundle bundle = new Bundle();
+            bundle.putInt(KEY_COMPLETED, 0);
+            fragment.setArguments(bundle);
+            fragmentManager.beginTransaction().replace(R.id.container, fragment).commit();
             break;
         case 1:
+            TaskListFragment completedFragment = new TaskListFragment();
+            Bundle completedBundle = new Bundle();
+            completedBundle.putInt(KEY_COMPLETED, 1);
+            completedFragment.setArguments(completedBundle);
+            fragmentManager.beginTransaction().replace(R.id.container, completedFragment).commit();
+            break;
+        case 2:
             fragmentManager.beginTransaction().replace(R.id.container, new TaskMapFragment())
                     .commit();
             break;
-        case 2:
+        case 3:
             fragmentManager.beginTransaction().replace(R.id.container, new PlaceListFragment())
                     .commit();
-            break;
-        }
-    }
-
-    public void onSectionAttached(int number) {
-        switch (number) {
-        case 1:
-            title = getString(R.string.title_ongoing);
-            break;
-        case 2:
-            title = getString(R.string.title_nearby);
-            break;
-        case 3:
-            title = getString(R.string.title_completed);
-            break;
-        case 4:
-            title = getString(R.string.title_map);
-            break;
-        case 5:
-            title = getString(R.string.title_places);
             break;
         }
     }

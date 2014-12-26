@@ -23,6 +23,7 @@ import android.view.View;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemLongClickListener;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -64,17 +65,7 @@ public class TaskListFragment extends ListFragment implements AbsListView.MultiC
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Cursor cursor;
-        if (getArguments() != null && getArguments().getInt(MainActivity.KEY_TASK_ID) == 0) {
-            Log.i(TAG, "Completed tasks");
-            cursor = getActivity().getContentResolver().query(Locus.Task.CONTENT_URI, PROJECTION,
-                    "completed = 1", null, null);
-        } else {
-            Log.i(TAG, "Not Completed tasks");
-            cursor = getActivity().getContentResolver().query(Locus.Task.CONTENT_URI, PROJECTION,
-                    "completed = 0", null, null);
-        }
-        adapter = new TaskAdapter(getActivity(), cursor, 0);
+        adapter = new TaskAdapter(getActivity(), refreshCursor(), 0);
         geofenceRemover = new GeofenceRemover(getActivity());
         setListAdapter(adapter);
     }
@@ -87,6 +78,9 @@ public class TaskListFragment extends ListFragment implements AbsListView.MultiC
         super.onActivityCreated(savedInstanceState);
         FloatingActionButton fab = (FloatingActionButton) getActivity().findViewById(R.id.fab);
         fab.setOnClickListener(this);
+        ImageView imageView = new ImageView(getActivity());
+        imageView.setImageResource(R.drawable.listview_empty_view);
+        getListView().setEmptyView(imageView);
         getListView().setChoiceMode(ListView.CHOICE_MODE_MULTIPLE_MODAL);
         getListView().setMultiChoiceModeListener(this);
         getListView().setOnItemLongClickListener(this);
@@ -99,9 +93,7 @@ public class TaskListFragment extends ListFragment implements AbsListView.MultiC
     @Override
     public void onStart() {
         super.onStart();
-        Cursor cursor = getActivity().getContentResolver().query(Locus.Task.CONTENT_URI,
-                PROJECTION, null, null, null);
-        adapter.changeCursor(cursor);
+        adapter.changeCursor(refreshCursor());
     }
 
     /**
@@ -155,7 +147,7 @@ public class TaskListFragment extends ListFragment implements AbsListView.MultiC
     public boolean onPrepareActionMode(ActionMode actionMode, Menu menu) {
         final int checked = getListView().getCheckedItemCount();
         CharSequence text = color(getResources().getColor(R.color.primary),
-                getResources().getString(R.string.cab_title, checked));
+                getString(R.string.cab_title, checked));
         actionMode.setTitle(text);
         return true;
     }
@@ -226,6 +218,20 @@ public class TaskListFragment extends ListFragment implements AbsListView.MultiC
 
         getListView().setItemChecked(position, true);
         return true;
+    }
+
+    private Cursor refreshCursor() {
+        Cursor cursor = null;
+        if (getArguments().getInt(MainActivity.KEY_COMPLETED) == 0) {
+            Log.i(TAG, "Not Completed tasks");
+            cursor = getActivity().getContentResolver().query(Locus.Task.CONTENT_URI, PROJECTION,
+                    Locus.Task.COLUMN_COMPLETED + "=0", null, null);
+        } else if (getArguments().getInt(MainActivity.KEY_COMPLETED) == 1) {
+            Log.i(TAG, "Completed tasks");
+            cursor = getActivity().getContentResolver().query(Locus.Task.CONTENT_URI, PROJECTION,
+                    Locus.Task.COLUMN_COMPLETED + "=1", null, null);
+        }
+        return cursor;
     }
 
     /**

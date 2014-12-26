@@ -103,7 +103,7 @@ public class NavigationDrawerFragment extends Fragment {
         });
         drawerListView.setAdapter(new NavDrawerAdapter(getActivity(),
                 R.layout.nav_drawer_item, new String[] {
-                    getString(R.string.title_ongoing), getString(R.string.title_map),
+                    getString(R.string.title_ongoing), getString(R.string.title_completed), getString(R.string.title_map),
                     getString(R.string.title_places), }));
         drawerListView.setItemChecked(currentSelectedPosition, true);
 

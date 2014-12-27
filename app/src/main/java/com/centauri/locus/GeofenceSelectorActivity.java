@@ -209,6 +209,7 @@ public class GeofenceSelectorActivity extends FragmentActivity implements OnMapC
         values.put(Locus.Task.COLUMN_LONGITUDE, loc.longitude);
         values.put(Locus.Task.COLUMN_RADIUS, geofenceCircle.getRadius());
         values.put(Locus.Task.COLUMN_DUE, System.currentTimeMillis());
+        values.put(Locus.Task.COLUMN_COMPLETED, 0);
         Uri uri = getContentResolver().insert(Locus.Task.CONTENT_URI, values);
         Log.i(TAG, "Added geofence: " + uri.getLastPathSegment());
 

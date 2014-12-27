@@ -66,7 +66,10 @@ public class TaskListFragment extends ListFragment implements AbsListView.MultiC
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        adapter = new TaskAdapter(getActivity(), refreshCursor(), 0);
+        Cursor cursor = getActivity().getContentResolver()
+                .query(Locus.Task.CONTENT_URI, PROJECTION, null, null, null);
+
+        adapter = new TaskAdapter(getActivity(), cursor, 0);
         geofenceRemover = new GeofenceRemover(getActivity());
         setListAdapter(adapter);
     }
@@ -94,7 +97,26 @@ public class TaskListFragment extends ListFragment implements AbsListView.MultiC
     @Override
     public void onStart() {
         super.onStart();
-        adapter.changeCursor(refreshCursor());
+        Cursor cursor;
+        if (getArguments().getInt(MainActivity.KEY_COMPLETED) == 1) {
+            Log.i(TAG, "Completed tasks");
+            cursor = getActivity().getContentResolver().query(Locus.Task.CONTENT_URI, PROJECTION,
+                    Locus.Task.COLUMN_COMPLETED + "=1", null, null);
+        } else {
+            Log.i(TAG, "Not Completed tasks");
+            cursor = getActivity().getContentResolver().query(Locus.Task.CONTENT_URI, PROJECTION,
+                    Locus.Task.COLUMN_COMPLETED + "=0", null, null);
+        }
+        adapter.changeCursor(cursor);
+        adapter.notifyDataSetChanged();
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        adapter = null;
+        ids = null;
+        geofenceRemover = null;
     }
 
     /**
@@ -172,9 +194,17 @@ public class TaskListFragment extends ListFragment implements AbsListView.MultiC
             geofenceRemover.removeGeofencesById(geofenceIds);
             Log.i(TAG, "Removed geofences: " + geofenceIds.toString());
 
-            Cursor cursor = getActivity().getContentResolver().query(Locus.Task.CONTENT_URI,
-                    PROJECTION, null, null, null);
-            adapter.swapCursor(cursor);
+            Cursor cursor;
+            if (getArguments().getInt(MainActivity.KEY_COMPLETED) == 1) {
+                Log.i(TAG, "Completed tasks");
+                cursor = getActivity().getContentResolver().query(Locus.Task.CONTENT_URI, PROJECTION,
+                        Locus.Task.COLUMN_COMPLETED + "=1", null, null);
+            } else {
+                Log.i(TAG, "Not Completed tasks");
+                cursor = getActivity().getContentResolver().query(Locus.Task.CONTENT_URI, PROJECTION,
+                        Locus.Task.COLUMN_COMPLETED + "=0", null, null);
+            }
+            adapter.changeCursor(cursor);
             adapter.notifyDataSetChanged();
             ids.clear();
             actionMode.finish();
@@ -221,20 +251,6 @@ public class TaskListFragment extends ListFragment implements AbsListView.MultiC
 
         getListView().setItemChecked(position, true);
         return true;
-    }
-
-    private Cursor refreshCursor() {
-        Cursor cursor = null;
-        if (getArguments().getInt(MainActivity.KEY_COMPLETED) == 0) {
-            Log.i(TAG, "Not Completed tasks");
-            cursor = getActivity().getContentResolver().query(Locus.Task.CONTENT_URI, PROJECTION,
-                    Locus.Task.COLUMN_COMPLETED + "=0", null, null);
-        } else if (getArguments().getInt(MainActivity.KEY_COMPLETED) == 1) {
-            Log.i(TAG, "Completed tasks");
-            cursor = getActivity().getContentResolver().query(Locus.Task.CONTENT_URI, PROJECTION,
-                    Locus.Task.COLUMN_COMPLETED + "=1", null, null);
-        }
-        return cursor;
     }
 
     /**

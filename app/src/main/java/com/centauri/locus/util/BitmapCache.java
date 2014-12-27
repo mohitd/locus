@@ -56,13 +56,14 @@ public class BitmapCache {
     }
 
     public void addBitmapToCache(String key, Bitmap bitmap) {
-        if (getBitmapFromCache(key) == null) {
+        if (cache.get(key) == null) {
             Log.i(TAG, "Adding bitmap: " + key);
             cache.put(key, bitmap);
         }
     }
 
     public void deleteBitmapFromCache(String key) {
+        Log.i(TAG, "Removing bitmap: " + key);
         cache.remove(key);
     }
 }

@@ -58,6 +58,7 @@ public class TaskEditActivity extends ActionBarActivity {
                 values.put(Locus.Task.COLUMN_DESCRIPTION, "");
                 values.put(Locus.Task.COLUMN_LATITUDE, 0);
                 values.put(Locus.Task.COLUMN_LONGITUDE, 0);
+                values.put(Locus.Task.COLUMN_COMPLETED, 0);
                 Uri uri = getContentResolver().insert(Locus.Task.CONTENT_URI, values);
                 long id = ContentUris.parseId(uri);
                 bundle = new Bundle();

@@ -8,6 +8,7 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.graphics.Bitmap;
+import android.graphics.Paint;
 import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -65,9 +66,12 @@ public class TaskAdapter extends CursorAdapter {
         double lon = cursor.getDouble(cursor.getColumnIndex(Locus.Task.COLUMN_LONGITUDE));
         int completed = cursor.getInt(cursor.getColumnIndexOrThrow(Locus.Task.COLUMN_COMPLETED));
 
-        TextView titleTextView = (TextView) view.findViewById(R.id.title_textview);
+        final TextView titleTextView = (TextView) view.findViewById(R.id.title_textview);
         CircularImageView mapImageView = (CircularImageView) view.findViewById(R.id.location_imageview);
         CheckBox checkBox = (CheckBox) view.findViewById(R.id.checkbox);
+
+        titleTextView.setText(title);
+        checkBox.setChecked(completed == 1);
 
         checkBox.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -80,9 +84,6 @@ public class TaskAdapter extends CursorAdapter {
                 context.getContentResolver().update(uri, values, null, null);
             }
         });
-
-        titleTextView.setText(title);
-        checkBox.setChecked(completed == 1);
 
         String key = 't' + 's' + String.valueOf(id);
         Bitmap image = cache.getBitmapFromCache(key);

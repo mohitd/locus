@@ -61,4 +61,8 @@ public class BitmapCache {
             cache.put(key, bitmap);
         }
     }
+
+    public void deleteBitmapFromCache(String key) {
+        cache.remove(key);
+    }
 }

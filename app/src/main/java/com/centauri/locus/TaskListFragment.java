@@ -30,6 +30,7 @@ import android.widget.Toast;
 import com.centauri.locus.adapter.TaskAdapter;
 import com.centauri.locus.geofence.GeofenceRemover;
 import com.centauri.locus.provider.Locus;
+import com.centauri.locus.util.BitmapCache;
 import com.melnykov.fab.FloatingActionButton;
 
 import java.util.ArrayList;
@@ -161,9 +162,11 @@ public class TaskListFragment extends ListFragment implements AbsListView.MultiC
         switch (menuItem.getItemId()) {
         case R.id.menu_delete:
             List<String> geofenceIds = new ArrayList<String>();
+            BitmapCache cache = BitmapCache.getInstance();
             for (Long id : ids) {
                 Uri uri = ContentUris.withAppendedId(Locus.Task.CONTENT_URI, id);
                 getActivity().getContentResolver().delete(uri, null, null);
+                cache.deleteBitmapFromCache("ts" + id);
                 geofenceIds.add(String.valueOf(id));
             }
             geofenceRemover.removeGeofencesById(geofenceIds);

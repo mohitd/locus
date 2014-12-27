@@ -108,7 +108,7 @@ public class TaskViewFragment extends Fragment {
             dateTextView.setText(getDate(due));
             timeTextView.setText(getTime(due));
             locationEditText.setText(locationText);
-            if (!taskDescription.isEmpty()) descriptionEditText.setText(taskDescription);
+            if (!(taskDescription != null && taskDescription.isEmpty())) descriptionEditText.setText(taskDescription);
             toolbar.setTitle(taskTitle);
         }
     }

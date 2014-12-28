@@ -9,17 +9,24 @@ import android.content.ContentValues;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
+import android.location.Address;
+import android.location.Geocoder;
 import android.location.Location;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.NavUtils;
+import android.support.v7.app.ActionBarActivity;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.AutoCompleteTextView;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.Toast;
 
+import com.centauri.locus.adapter.PlacesAutoCompleteAdapter;
 import com.centauri.locus.provider.Locus;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -36,12 +43,16 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
+import java.io.IOException;
+import java.util.List;
+import java.util.Locale;
+
 /**
  * @author mohitd2000
  * 
  */
-public class GeofenceSelectorActivity extends FragmentActivity implements OnMapClickListener,
-        GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, LocationListener {
+public class GeofenceSelectorActivity extends ActionBarActivity implements OnMapClickListener,
+        GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, LocationListener, AdapterView.OnItemClickListener {
 
     private static final String TAG = GeofenceSelectorActivity.class.getSimpleName();
 
@@ -68,6 +79,14 @@ public class GeofenceSelectorActivity extends FragmentActivity implements OnMapC
         map.setOnMapClickListener(this);
         map.setMyLocationEnabled(true);
 
+        AutoCompleteTextView placesACTextView = (AutoCompleteTextView) findViewById(R.id.placesACTextView);
+        placesACTextView.setAdapter(new PlacesAutoCompleteAdapter(this, R.layout.list_item_autocomplete_place));
+        placesACTextView.setOnItemClickListener(this);
+
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setTitle("Create Task");
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
 
     /**
@@ -222,4 +241,20 @@ public class GeofenceSelectorActivity extends FragmentActivity implements OnMapC
         }
     }
 
+    @Override
+    public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
+        String str = (String) adapterView.getItemAtPosition(position);
+        Geocoder geocoder = new Geocoder(this, Locale.getDefault());
+        List<Address> addresses = null;
+        try {
+            addresses = geocoder.getFromLocationName(str, 1);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        double lat = addresses.get(0).getLatitude();
+        double lon = addresses.get(0).getLongitude();
+        map.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(lat, lon), 16.0f));
+        onMapClick(new LatLng(lat, lon));
+        Toast.makeText(this, str, Toast.LENGTH_SHORT).show();
+    }
 }

@@ -56,18 +56,27 @@
         android:layout_marginRight="@dimen/keyline_1"
         android:layout_below="@id/largeDivider"
         android:layout_marginTop="@dimen/keyline_1"
-        android:padding="4dp"
         android:background="?attr/selectableItemBackground"
         android:text="10:30 AM"/>
+
+    <View
+        android:id="@+id/datetimeDivider"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_alignParentRight="true"
+        android:layout_alignLeft="@+id/dateTextView"
+        android:layout_marginTop="@dimen/keyline_1"
+        android:layout_marginBottom="@dimen/keyline_1"
+        android:layout_below="@id/timeTextView"
+        android:background="#1E000000"/>
 
     <ImageView
         android:id="@+id/placeImageView"
         android:layout_width="24dp"
         android:layout_height="24dp"
         android:layout_alignParentLeft="true"
-        android:layout_below="@+id/datetimeImageView"
+        android:layout_below="@+id/datetimeDivider"
         android:layout_marginLeft="@dimen/keyline_1"
-        android:layout_marginTop="32dp"
         android:contentDescription="@string/date_time"
         android:src="@drawable/ic_place"/>
 
@@ -77,22 +86,31 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
-        android:layout_below="@+id/datetimeImageView"
+        android:layout_below="@+id/datetimeDivider"
         android:layout_marginLeft="@dimen/keyline_2"
-        android:layout_marginTop="32dp"
         android:layout_marginRight="@dimen/keyline_1"
         android:layout_toRightOf="@+id/placeImageView"
         android:background="?attr/selectableItemBackground"
         android:text="No location found."/>
+
+    <View
+        android:id="@+id/locationDivider"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_alignParentRight="true"
+        android:layout_alignLeft="@+id/locationTextView"
+        android:layout_marginTop="@dimen/keyline_1"
+        android:layout_marginBottom="@dimen/keyline_1"
+        android:layout_below="@id/locationTextView"
+        android:background="#1E000000"/>
 
     <ImageView
         android:id="@+id/notesImageView"
         android:layout_width="24dp"
         android:layout_height="24dp"
         android:layout_alignParentLeft="true"
-        android:layout_below="@+id/placeImageView"
+        android:layout_below="@+id/locationDivider"
         android:layout_marginLeft="@dimen/keyline_1"
-        android:layout_marginTop="32dp"
         android:contentDescription="@string/date_time"
         android:src="@drawable/ic_notes"/>
 
@@ -104,10 +122,9 @@
         android:minLines="1"
         android:background="@android:color/transparent"
         android:layout_alignParentLeft="true"
-        android:layout_below="@id/locationTextView"
+        android:layout_below="@+id/locationDivider"
         android:layout_alignLeft="@id/locationTextView"
         android:layout_marginLeft="@dimen/keyline_2"
-        android:layout_marginTop="32dp"
         android:layout_marginRight="@dimen/keyline_1"
         android:layout_toRightOf="@+id/notesImageView"
         android:hint="Add a description."/>

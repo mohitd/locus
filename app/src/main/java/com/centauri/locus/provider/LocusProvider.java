@@ -14,7 +14,6 @@ import android.database.sqlite.SQLiteQueryBuilder;
 import android.net.Uri;
 import android.text.TextUtils;
 
-import com.centauri.locus.provider.Locus.Place;
 import com.centauri.locus.provider.Locus.Task;
 
 import java.util.HashMap;
@@ -30,9 +29,6 @@ public class LocusProvider extends ContentProvider {
     private static final int TASKS = 100;
     private static final int TASK_ID = 110;
 
-    private static final int PLACES = 200;
-    private static final int PLACE_ID = 210;
-
     private static final UriMatcher uriMatcher = new UriMatcher(UriMatcher.NO_MATCH);
 
     private static final HashMap<String, String> tasksProjectionMap;
@@ -40,8 +36,6 @@ public class LocusProvider extends ContentProvider {
     static {
         uriMatcher.addURI(Locus.AUTHORITY, "tasks", TASKS);
         uriMatcher.addURI(Locus.AUTHORITY, "tasks/*", TASK_ID);
-        uriMatcher.addURI(Locus.AUTHORITY, "places", PLACES);
-        uriMatcher.addURI(Locus.AUTHORITY, "places/*", PLACE_ID);
 
         tasksProjectionMap = new HashMap<String, String>();
         tasksProjectionMap.put(Task._ID, Task._ID);
@@ -79,21 +73,10 @@ public class LocusProvider extends ContentProvider {
             builder.setTables(Task.TABLE_NAME);
             builder.setProjectionMap(tasksProjectionMap);
             break;
-
         case TASK_ID:
             builder.setTables(Task.TABLE_NAME);
             builder.appendWhere(Task._ID + "=" + uri.getLastPathSegment());
             break;
-
-        case PLACES:
-            builder.setTables(Place.TABLE_NAME);
-            break;
-
-        case PLACE_ID:
-            builder.setTables(Place.TABLE_NAME);
-            builder.appendWhere(Place._ID + "=" + uri.getLastPathSegment());
-            break;
-
         default:
             throw new IllegalArgumentException("Unknown URI:" + uri);
         }
@@ -123,12 +106,6 @@ public class LocusProvider extends ContentProvider {
             id = db.insertOrThrow(Task.TABLE_NAME, null, values);
             result = ContentUris.withAppendedId(Task.CONTENT_URI, id);
             break;
-
-        case PLACES:
-            id = db.insertOrThrow(Place.TABLE_NAME, null, values);
-            result = ContentUris.withAppendedId(Place.CONTENT_URI, id);
-            break;
-
         default:
             throw new IllegalArgumentException("Unknown URI:" + uri);
         }
@@ -156,7 +133,6 @@ public class LocusProvider extends ContentProvider {
         case TASKS:
             rows = db.update(Task.TABLE_NAME, values, selection, selectionArgs);
             break;
-
         case TASK_ID:
             String taskId = uri.getLastPathSegment();
             rows = db.update(Task.TABLE_NAME, values,
@@ -164,19 +140,6 @@ public class LocusProvider extends ContentProvider {
                             + (!TextUtils.isEmpty(selection) ? " AND (" + selection + ')' : ""),
                     selectionArgs);
             break;
-
-        case PLACES:
-            rows = db.update(Place.TABLE_NAME, values, selection, selectionArgs);
-            break;
-
-        case PLACE_ID:
-            String placeId = uri.getLastPathSegment();
-            rows = db.update(Place.TABLE_NAME, values,
-                    Task._ID + "=" + placeId
-                            + (!TextUtils.isEmpty(selection) ? " AND (" + selection + ')' : ""),
-                    selectionArgs);
-            break;
-
         default:
             throw new IllegalArgumentException("Unknown URI:" + uri);
         }
@@ -200,7 +163,6 @@ public class LocusProvider extends ContentProvider {
         case TASKS:
             rows = db.delete(Task.TABLE_NAME, selection, selectionArgs);
             break;
-
         case TASK_ID:
             String taskId = uri.getLastPathSegment();
             rows = db.delete(Task.TABLE_NAME,
@@ -208,19 +170,6 @@ public class LocusProvider extends ContentProvider {
                             + (!TextUtils.isEmpty(selection) ? " AND (" + selection + ')' : ""),
                     selectionArgs);
             break;
-
-        case PLACES:
-            rows = db.delete(Place.TABLE_NAME, selection, selectionArgs);
-            break;
-
-        case PLACE_ID:
-            String placeId = uri.getLastPathSegment();
-            rows = db.delete(Place.TABLE_NAME,
-                    Task._ID + "=" + placeId
-                            + (!TextUtils.isEmpty(selection) ? " AND (" + selection + ')' : ""),
-                    selectionArgs);
-            break;
-
         default:
             throw new IllegalArgumentException("Unknown URI:" + uri);
         }
@@ -238,16 +187,8 @@ public class LocusProvider extends ContentProvider {
         switch (match) {
         case TASKS:
             return Task.CONTENT_TYPE;
-
         case TASK_ID:
             return Task.CONTENT_ITEM_TYPE;
-
-        case PLACES:
-            return Place.CONTENT_TYPE;
-
-        case PLACE_ID:
-            return Place.CONTENT_ITEM_TYPE;
-
         default:
             throw new IllegalArgumentException("Unknown URI:" + uri);
         }

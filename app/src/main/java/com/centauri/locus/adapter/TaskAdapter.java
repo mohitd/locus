@@ -10,6 +10,7 @@ import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.Paint;
 import android.net.Uri;
+import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -86,7 +87,8 @@ public class TaskAdapter extends CursorAdapter {
         });
 
         String key = 't' + 's' + String.valueOf(id);
-        Bitmap image = cache.getBitmapFromCache(key);
+        Bitmap cacheImage = cache.getBitmapFromCache(key);
+        Bitmap image = RoundedBitmapDrawableFactory.create(context.getResources(), cacheImage).getBitmap();
         if (image != null) {
             mapImageView.setImageBitmap(image);
         } else {

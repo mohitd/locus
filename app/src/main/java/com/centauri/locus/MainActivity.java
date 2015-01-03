@@ -108,10 +108,6 @@ public class MainActivity extends ActionBarActivity implements
             fragmentManager.beginTransaction().replace(R.id.container, new TaskMapFragment())
                     .commit();
             break;
-        case 3:
-            fragmentManager.beginTransaction().replace(R.id.container, new PlaceListFragment())
-                    .commit();
-            break;
         }
     }
 

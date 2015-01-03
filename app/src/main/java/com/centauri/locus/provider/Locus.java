@@ -41,20 +41,4 @@ public final class Locus {
         public static final String CONTENT_ITEM_TYPE = "vnd.android.cursor.item/vnd.centauri.task";
     }
 
-    public static final class Place implements BaseColumns {
-        public static final Uri CONTENT_URI = BASE_CONTENT_URI.buildUpon().appendPath(PATH_PLACES)
-                .build();
-
-        public static final String TABLE_NAME = "place";
-
-        public static final String COLUMN_TITLE = "title";
-        public static final String COLUMN_LATITUDE = "latitude";
-        public static final String COLUMN_LONGITUDE = "longitude";
-
-        public static final String DEFAULT_SORT_ORDER = COLUMN_TITLE + " DESC";
-
-        public static final String CONTENT_TYPE = "vnd.android.cursor.dir/vnd.centauri.place";
-        public static final String CONTENT_ITEM_TYPE = "vnd.android.cursor.item/vnd.centauri.place";
-    }
-
 }

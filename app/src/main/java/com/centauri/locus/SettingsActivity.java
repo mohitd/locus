@@ -22,7 +22,7 @@ public class SettingsActivity extends PreferenceActivity {
                 .replace(android.R.id.content, new SettingsFragment()).commit();
     }
 
-    public class SettingsFragment extends PreferenceFragment {
+    public static class SettingsFragment extends PreferenceFragment {
         /**
          * @see android.preference.PreferenceFragment#onCreate(android.os.Bundle)
          */

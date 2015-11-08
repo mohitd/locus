@@ -19,7 +19,6 @@ public final class Locus {
     public static final Uri BASE_CONTENT_URI = Uri.parse("content://" + AUTHORITY);
 
     private static final String PATH_TASKS = "tasks";
-    private static final String PATH_PLACES = "places";
 
     public static final class Task implements BaseColumns {
         public static final Uri CONTENT_URI = BASE_CONTENT_URI.buildUpon().appendPath(PATH_TASKS)
@@ -33,6 +32,7 @@ public final class Locus {
         public static final String COLUMN_LONGITUDE = "longitude";
         public static final String COLUMN_RADIUS = "radius";
         public static final String COLUMN_DUE = "due";
+        public static final String COLUMN_TRANSITION = "transition";
         public static final String COLUMN_COMPLETED = "completed";
 
         public static final String DEFAULT_SORT_ORDER = COLUMN_TITLE + " DESC";

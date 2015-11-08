@@ -50,7 +50,7 @@
 
     <TextView
         style="@style/Base.TextAppearance.AppCompat.Body1"
-        android:id="@+id/locationEditText"
+        android:id="@+id/locationTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
@@ -62,12 +62,22 @@
         android:background="@android:color/transparent"
         android:text="No location found"/>
 
+    <TextView
+        style="@style/Base.TextAppearance.AppCompat.Body1"
+        android:id="@+id/transitionTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/locationTextView"
+        android:layout_alignLeft="@id/locationTextView"
+        android:layout_marginRight="@dimen/keyline_1"
+        android:layout_marginTop="8dp"/>
+
     <ImageView
         android:id="@+id/notesImageView"
         android:layout_width="24dp"
         android:layout_height="24dp"
         android:layout_alignParentLeft="true"
-        android:layout_below="@+id/placeImageView"
+        android:layout_below="@+id/transitionTextView"
         android:layout_marginLeft="@dimen/keyline_1"
         android:layout_marginTop="32dp"
         android:contentDescription="@string/date_time"
@@ -75,11 +85,11 @@
 
     <TextView
         style="@style/Base.TextAppearance.AppCompat.Body1"
-        android:id="@+id/descriptionEditText"
+        android:id="@+id/descriptionTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
-        android:layout_below="@+id/placeImageView"
+        android:layout_below="@+id/transitionTextView"
         android:layout_marginLeft="@dimen/keyline_2"
         android:layout_marginTop="32dp"
         android:layout_marginRight="@dimen/keyline_1"

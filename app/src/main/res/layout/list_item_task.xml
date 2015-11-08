@@ -5,7 +5,7 @@
     android:layout_height="@dimen/listview_item_height"
     android:background="@drawable/listitem_background" >
 
-    <com.centauri.locus.widget.CircularImageView
+    <com.centauri.locus.widget.MLRoundedImageView
         android:id="@+id/location_imageview"
         android:layout_height="@dimen/circularimageview_diameter"
         android:layout_width="@dimen/circularimageview_diameter"

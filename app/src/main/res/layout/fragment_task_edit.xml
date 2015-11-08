@@ -93,6 +93,26 @@
         android:background="?attr/selectableItemBackground"
         android:text="No location found."/>
 
+    <Spinner
+        android:id="@+id/transitionSpinner"
+        android:layout_width="wrap_content"
+        android:layout_height="48dp"
+        android:layout_marginTop="8dp"
+        android:layout_alignLeft="@id/locationTextView"
+        android:layout_below="@+id/locationTextView"/>
+
+    <TextView
+        style="@style/TextAppearance.AppCompat.Body1"
+        android:layout_width="wrap_content"
+        android:layout_height="48dp"
+        android:layout_below="@+id/locationTextView"
+        android:layout_toRightOf="@id/transitionSpinner"
+        android:layout_alignBaseline="@id/transitionSpinner"
+        android:layout_marginTop="8dp"
+        android:layout_marginRight="@dimen/keyline_1"
+        android:layout_marginLeft="@dimen/keyline_1"
+        android:text="@string/geofence"/>
+
     <View
         android:id="@+id/locationDivider"
         android:layout_width="match_parent"
@@ -101,7 +121,7 @@
         android:layout_alignLeft="@+id/locationTextView"
         android:layout_marginTop="@dimen/keyline_1"
         android:layout_marginBottom="@dimen/keyline_1"
-        android:layout_below="@id/locationTextView"
+        android:layout_below="@id/transitionSpinner"
         android:background="#1E000000"/>
 
     <ImageView

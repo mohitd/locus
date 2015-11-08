@@ -45,6 +45,7 @@ public class LocusProvider extends ContentProvider {
         tasksProjectionMap.put(Task.COLUMN_LONGITUDE, Task.COLUMN_LONGITUDE);
         tasksProjectionMap.put(Task.COLUMN_RADIUS, Task.COLUMN_RADIUS);
         tasksProjectionMap.put(Task.COLUMN_DUE, Task.COLUMN_DUE);
+        tasksProjectionMap.put(Task.COLUMN_TRANSITION, Task.COLUMN_TRANSITION);
         tasksProjectionMap.put(Task.COLUMN_COMPLETED, Task.COLUMN_COMPLETED);
     }
 

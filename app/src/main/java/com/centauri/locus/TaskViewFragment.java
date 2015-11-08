@@ -31,10 +31,9 @@ public class TaskViewFragment extends Fragment {
     private static final String TAG = TaskEditFragment.class.getSimpleName();
     private static final String[] PROJECTION = { Locus.Task._ID, Locus.Task.COLUMN_TITLE,
             Locus.Task.COLUMN_DESCRIPTION, Locus.Task.COLUMN_LATITUDE, Locus.Task.COLUMN_LONGITUDE,
-            Locus.Task.COLUMN_DUE };
+            Locus.Task.COLUMN_TRANSITION, Locus.Task.COLUMN_DUE };
 
     private Cursor taskCursor;
-    private Uri taskUri;
 
     /**
      * @see android.app.Fragment#onCreate(android.os.Bundle)
@@ -44,7 +43,7 @@ public class TaskViewFragment extends Fragment {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
             long taskId = getArguments().getLong(MainActivity.KEY_TASK_ID);
-            taskUri = ContentUris.withAppendedId(Locus.Task.CONTENT_URI, taskId);
+            Uri taskUri = ContentUris.withAppendedId(Locus.Task.CONTENT_URI, taskId);
             taskCursor = getActivity().getContentResolver().query(taskUri, PROJECTION, null, null,
                     null);
         }
@@ -57,8 +56,7 @@ public class TaskViewFragment extends Fragment {
      */
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_task_view, container, false);
-        return view;
+        return inflater.inflate(R.layout.fragment_task_view, container, false);
     }
 
     /**
@@ -76,6 +74,7 @@ public class TaskViewFragment extends Fragment {
             long due = taskCursor.getLong(taskCursor.getColumnIndexOrThrow(Locus.Task.COLUMN_DUE));
             long lat = taskCursor.getLong(taskCursor.getColumnIndexOrThrow(Locus.Task.COLUMN_LATITUDE));
             long lon = taskCursor.getLong(taskCursor.getColumnIndexOrThrow(Locus.Task.COLUMN_LONGITUDE));
+            int transition = taskCursor.getInt(taskCursor.getColumnIndexOrThrow(Locus.Task.COLUMN_TRANSITION));
             taskCursor.close();
 
             String locationText = "No location.";
@@ -101,10 +100,12 @@ public class TaskViewFragment extends Fragment {
 
             TextView dateTextView = (TextView) getActivity().findViewById(R.id.dateTextView);
             TextView timeTextView = (TextView) getActivity().findViewById(R.id.timeTextView);
-            TextView locationEditText = (TextView) getActivity().findViewById(R.id.locationEditText);
-            TextView descriptionEditText = (TextView) getActivity().findViewById(R.id.descriptionEditText);
+            TextView locationEditText = (TextView) getActivity().findViewById(R.id.locationTextView);
+            TextView descriptionEditText = (TextView) getActivity().findViewById(R.id.descriptionTextView);
+            TextView transitionTextView = (TextView) getActivity().findViewById(R.id.transitionTextView);
             Toolbar toolbar = (Toolbar) getActivity().findViewById(R.id.toolbar);
 
+            transitionTextView.setText(transition == 0 ? "Enter Geofence" : "Exit Geofence");
             dateTextView.setText(getDate(due));
             timeTextView.setText(getTime(due));
             locationEditText.setText(locationText);
@@ -117,9 +118,9 @@ public class TaskViewFragment extends Fragment {
         StringBuilder builder = new StringBuilder();
         Calendar cal = Calendar.getInstance(Locale.getDefault());
         cal.setTimeInMillis(millis);
-        builder.append(getDayOfWeek(cal.get(Calendar.DAY_OF_WEEK)) + ", ");
-        builder.append(cal.getDisplayName(Calendar.MONTH, Calendar.SHORT, Locale.getDefault()) + " ");
-        builder.append(cal.get(Calendar.DAY_OF_MONTH) + ", ");
+        builder.append(getDayOfWeek(cal.get(Calendar.DAY_OF_WEEK))).append(", ");
+        builder.append(cal.getDisplayName(Calendar.MONTH, Calendar.SHORT, Locale.getDefault())).append(" ");
+        builder.append(cal.get(Calendar.DAY_OF_MONTH)).append(", ");
         builder.append(cal.get(Calendar.YEAR));
         return builder.toString();
     }
@@ -128,10 +129,10 @@ public class TaskViewFragment extends Fragment {
         StringBuilder builder = new StringBuilder();
         Calendar cal = Calendar.getInstance(Locale.getDefault());
         cal.setTimeInMillis(millis);
-        builder.append(cal.get(Calendar.HOUR) + ":");
+        builder.append(cal.get(Calendar.HOUR)).append(":");
 
         if (cal.get(Calendar.MINUTE) == 0) builder.append("00 ");
-        else builder.append(cal.get(Calendar.MINUTE) + " ");
+        else builder.append(cal.get(Calendar.MINUTE)).append(" ");
 
         if (cal.get(Calendar.AM_PM) == 0) builder.append("AM");
         else builder.append("PM");

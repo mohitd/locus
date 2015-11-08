@@ -79,5 +79,11 @@
     <string name="lat_lng_pattern">* ###.00000000;* -###.00000000</string>
     <string name="radius_pattern">* #.0000</string>
     <string name="date_time">Date Time</string>
+    <string name="geofence">Geofence</string>
+
+    <string-array name="transition_entries">
+        <item>Enter</item>
+        <item>Exit</item>
+    </string-array>
 
 </resources>

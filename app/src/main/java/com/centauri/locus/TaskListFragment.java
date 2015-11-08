@@ -146,7 +146,7 @@ public class TaskListFragment extends ListFragment implements AbsListView.MultiC
 
     @Override
     public void onClick(View view) {
-        startActivity(new Intent(getActivity(), GeofenceSelectorActivity.class));
+        startActivity(new Intent(getActivity(), TaskEditActivity.class));
     }
 
     /**

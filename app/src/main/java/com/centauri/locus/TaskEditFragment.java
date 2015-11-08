@@ -3,8 +3,8 @@
  */
 package com.centauri.locus;
 
+import android.app.Activity;
 import android.app.DatePickerDialog;
-import android.app.FragmentManager;
 import android.app.TimePickerDialog;
 import android.content.ContentUris;
 import android.content.ContentValues;
@@ -24,9 +24,10 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.DatePicker;
 import android.widget.EditText;
-import android.widget.ImageButton;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.TimePicker;
 
@@ -35,22 +36,21 @@ import com.centauri.locus.provider.Locus;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.Locale;
-import java.util.TimeZone;
 
 /**
  * @author mohitd2000
  * 
  */
 public class TaskEditFragment extends Fragment implements OnClickListener,
-        DatePickerDialog.OnDateSetListener,
-        TimePickerDialog.OnTimeSetListener {
+        DatePickerDialog.OnDateSetListener, TimePickerDialog.OnTimeSetListener {
     private static final String TAG = TaskEditFragment.class.getSimpleName();
     private static final String[] PROJECTION = { Locus.Task._ID, Locus.Task.COLUMN_TITLE,
         Locus.Task.COLUMN_LATITUDE, Locus.Task.COLUMN_LONGITUDE,
-        Locus.Task.COLUMN_DESCRIPTION, Locus.Task.COLUMN_DUE };
+        Locus.Task.COLUMN_DESCRIPTION, Locus.Task.COLUMN_TRANSITION, Locus.Task.COLUMN_DUE };
+
+    public static final int REQUEST_GEOFENCE = 1;
 
     private Cursor taskCursor;
     private Uri taskUri;
@@ -60,8 +60,9 @@ public class TaskEditFragment extends Fragment implements OnClickListener,
     private TextView dateTextView;
     private TextView timeTextView;
     private TextView locationTextView;
+    private Spinner transitionSpinner;
 
-    private int hour = 0, minute = 0, year = 0, month = 0, day = 0;
+    private int hourOfDay = 0, minute = 0, year = 0, month = 0, day = 0;
 
     /**
      * @see android.app.Fragment#onCreate(android.os.Bundle)
@@ -77,6 +78,12 @@ public class TaskEditFragment extends Fragment implements OnClickListener,
         }
         setHasOptionsMenu(true);
 
+        Calendar cal = Calendar.getInstance();
+        hourOfDay = cal.get(Calendar.HOUR_OF_DAY);
+        minute = cal.get(Calendar.MINUTE);
+        year = cal.get(Calendar.YEAR);
+        month = cal.get(Calendar.MONTH);
+        day = cal.get(Calendar.DAY_OF_MONTH);
     }
 
     /**
@@ -98,9 +105,8 @@ public class TaskEditFragment extends Fragment implements OnClickListener,
         case android.R.id.home:
         case R.id.menu_save:
             saveData();
-            Intent intent = new Intent(getActivity(), TaskViewActivity.class);
+            Intent intent = new Intent(getActivity(), MainActivity.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-            intent.putExtras(getArguments());
             startActivity(intent);
             getActivity().finish();
             break;
@@ -123,9 +129,15 @@ public class TaskEditFragment extends Fragment implements OnClickListener,
         locationTextView = (TextView) view.findViewById(R.id.locationTextView);
         titleEditText = (EditText) view.findViewById(R.id.titleEditText);
         descEditText = (EditText) view.findViewById(R.id.descriptionEditText);
+        transitionSpinner = (Spinner) view.findViewById(R.id.transitionSpinner);
 
         dateTextView.setOnClickListener(this);
         timeTextView.setOnClickListener(this);
+        locationTextView.setOnClickListener(this);
+
+        ArrayAdapter<CharSequence> spinnerAdapter = ArrayAdapter.createFromResource(getActivity(),
+                R.array.transition_entries, android.R.layout.simple_spinner_dropdown_item);
+        transitionSpinner.setAdapter(spinnerAdapter);
 
         return view;
     }
@@ -145,15 +157,8 @@ public class TaskEditFragment extends Fragment implements OnClickListener,
             long due = taskCursor.getLong(taskCursor.getColumnIndexOrThrow(Locus.Task.COLUMN_DUE));
             long lat = taskCursor.getLong(taskCursor.getColumnIndexOrThrow(Locus.Task.COLUMN_LATITUDE));
             long lon = taskCursor.getLong(taskCursor.getColumnIndexOrThrow(Locus.Task.COLUMN_LONGITUDE));
+            int transition = taskCursor.getInt(taskCursor.getColumnIndexOrThrow(Locus.Task.COLUMN_TRANSITION));
             taskCursor.close();
-
-            Calendar cal = Calendar.getInstance(Locale.getDefault());
-            cal.setTimeInMillis(due);
-            this.year = cal.get(Calendar.YEAR);
-            this.month = cal.get(Calendar.MONTH);
-            this.day = cal.get(Calendar.DAY_OF_MONTH);
-            this.hour = cal.get(Calendar.HOUR_OF_DAY);
-            this.minute = cal.get(Calendar.MINUTE);
 
             String locationText = "No location.";
             Geocoder geocoder = new Geocoder(getActivity(), Locale.getDefault());
@@ -181,6 +186,8 @@ public class TaskEditFragment extends Fragment implements OnClickListener,
 
             titleEditText.setText(taskTitle);
             descEditText.setText(taskDescription);
+
+            transitionSpinner.setSelection(transition);
         }
 
         // So apparently you can only use getSupportActionBar() immediately after setSupportActionBar()???
@@ -199,8 +206,13 @@ public class TaskEditFragment extends Fragment implements OnClickListener,
             DatePickerDialog dateDialog = new DatePickerDialog(getActivity(), this, this.year, this.month, this.day);
             dateDialog.show();
         } else if (view.getId() == R.id.timeTextView) {
-            TimePickerDialog timeDialog = new TimePickerDialog(getActivity(), this, this.hour, this.minute, false);
+            TimePickerDialog timeDialog = new TimePickerDialog(getActivity(), this, this.hourOfDay, this.minute, false);
             timeDialog.show();
+        } else if (view.getId() == R.id.locationTextView) {
+            saveData();
+            Intent intent = new Intent(getActivity(), GeofenceSelectorActivity.class);
+            intent.putExtras(getArguments());
+            startActivityForResult(intent, REQUEST_GEOFENCE);
         }
     }
 
@@ -217,16 +229,26 @@ public class TaskEditFragment extends Fragment implements OnClickListener,
     private void saveData() {
         String title = titleEditText.getText().toString();
         String desc = descEditText.getText().toString();
+        int transition = transitionSpinner.getSelectedItemPosition();
 
         Calendar cal = Calendar.getInstance(Locale.getDefault());
-        cal.set(year, month, day, hour, minute);
+        cal.set(year, month, day, hourOfDay, minute);
 
         ContentValues values = new ContentValues();
         values.put(Locus.Task.COLUMN_TITLE, title);
         values.put(Locus.Task.COLUMN_DESCRIPTION, desc);
         values.put(Locus.Task.COLUMN_DUE, cal.getTimeInMillis());
+        values.put(Locus.Task.COLUMN_TRANSITION, transition);
 
         getActivity().getContentResolver().update(taskUri, values, null, null);
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == REQUEST_GEOFENCE && resultCode == Activity.RESULT_OK) {
+
+        }
     }
 
     @Override
@@ -242,7 +264,7 @@ public class TaskEditFragment extends Fragment implements OnClickListener,
 
     @Override
     public void onTimeSet(TimePicker timePicker, int hourOfDay, int minute) {
-        this.hour = hourOfDay;
+        this.hourOfDay = hourOfDay;
         this.minute = minute;
 
         Calendar cal = Calendar.getInstance(Locale.getDefault());
@@ -254,9 +276,9 @@ public class TaskEditFragment extends Fragment implements OnClickListener,
         StringBuilder builder = new StringBuilder();
         Calendar cal = Calendar.getInstance(Locale.getDefault());
         cal.setTimeInMillis(millis);
-        builder.append(getDayOfWeek(cal.get(Calendar.DAY_OF_WEEK)) + ", ");
-        builder.append(cal.getDisplayName(Calendar.MONTH, Calendar.SHORT, Locale.getDefault()) + " ");
-        builder.append(cal.get(Calendar.DAY_OF_MONTH) + ", ");
+        builder.append(getDayOfWeek(cal.get(Calendar.DAY_OF_WEEK))).append(", ");
+        builder.append(cal.getDisplayName(Calendar.MONTH, Calendar.SHORT, Locale.getDefault())).append(" ");
+        builder.append(cal.get(Calendar.DAY_OF_MONTH)).append(", ");
         builder.append(cal.get(Calendar.YEAR));
         return builder.toString();
     }
@@ -265,10 +287,10 @@ public class TaskEditFragment extends Fragment implements OnClickListener,
         StringBuilder builder = new StringBuilder();
         Calendar cal = Calendar.getInstance(Locale.getDefault());
         cal.setTimeInMillis(millis);
-        builder.append(cal.get(Calendar.HOUR) + ":");
+        builder.append(cal.get(Calendar.HOUR)).append(":");
 
         if (cal.get(Calendar.MINUTE) == 0) builder.append("00 ");
-        else builder.append(cal.get(Calendar.MINUTE) + " ");
+        else builder.append(cal.get(Calendar.MINUTE)).append(" ");
 
         if (cal.get(Calendar.AM_PM) == 0) builder.append("AM");
         else builder.append("PM");

@@ -28,6 +28,7 @@ import android.widget.Toast;
 
 import com.centauri.locus.adapter.PlacesAutoCompleteAdapter;
 import com.centauri.locus.geofence.GeofenceRequester;
+import com.centauri.locus.geofence.GeofenceUtils;
 import com.centauri.locus.geofence.SimpleGeofence;
 import com.centauri.locus.provider.Locus;
 import com.google.android.gms.common.ConnectionResult;
@@ -59,6 +60,10 @@ public class GeofenceSelectorActivity extends ActionBarActivity implements OnMap
         GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, LocationListener, AdapterView.OnItemClickListener {
 
     private static final String TAG = GeofenceSelectorActivity.class.getSimpleName();
+
+    public static final String KEY_LAT = "lat";
+    public static final String KEY_LON = "lon";
+    public static final String KEY_RADIUS = "radius";
 
     private GoogleMap map;
     private GoogleApiClient googleApiClient;
@@ -135,7 +140,7 @@ public class GeofenceSelectorActivity extends ActionBarActivity implements OnMap
 
             geofenceCircle = map.addCircle(circle);
             hasPlacedGeofence = true;
-            newTaskDialog();
+            confirmDialog();
         } else if (hasPlacedMarker && hasPlacedGeofence) {
             marker.remove();
             geofenceCircle.remove();
@@ -223,6 +228,29 @@ public class GeofenceSelectorActivity extends ActionBarActivity implements OnMap
         dialog.show();
     }
 
+    private void confirmDialog() {
+        final LatLng latLng = markerLoc;
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setMessage("Confirm geofence?");
+        builder.setPositiveButton("Confirm", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                Bundle bundle = new Bundle();
+                bundle.putDouble(KEY_LAT, latLng.latitude);
+                bundle.putDouble(KEY_LON, latLng.longitude);
+
+            }
+        });
+        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                clearMarkers();
+                dialog.dismiss();
+            }
+        });
+        builder.create().show();
+    }
+
     private void clearMarkers() {
         marker.remove();
         geofenceCircle.remove();
@@ -244,6 +272,7 @@ public class GeofenceSelectorActivity extends ActionBarActivity implements OnMap
         values.put(Locus.Task.COLUMN_LONGITUDE, lon);
         values.put(Locus.Task.COLUMN_RADIUS, radius);
         values.put(Locus.Task.COLUMN_DUE, due);
+        values.put(Locus.Task.COLUMN_TRANSITION, 0);
         values.put(Locus.Task.COLUMN_COMPLETED, 0);
         Uri uri = getContentResolver().insert(Locus.Task.CONTENT_URI, values);
         Log.i(TAG, "Added geofence: " + uri.getLastPathSegment());

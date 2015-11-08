@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package com.centauri.locus;
 
@@ -50,30 +50,31 @@ public class TaskEditActivity extends ActionBarActivity {
             getContentResolver().update(taskUri, contentValues, null, null);
         }
 
-        if (savedInstanceState == null) {
-            Bundle bundle = getIntent().getExtras();
-            if (bundle == null) {
-                ContentValues values = new ContentValues();
-                values.put(Locus.Task.COLUMN_TITLE, "Task name");
-                values.put(Locus.Task.COLUMN_DESCRIPTION, "");
-                values.put(Locus.Task.COLUMN_LATITUDE, 0);
-                values.put(Locus.Task.COLUMN_LONGITUDE, 0);
-                values.put(Locus.Task.COLUMN_COMPLETED, 0);
-                Uri uri = getContentResolver().insert(Locus.Task.CONTENT_URI, values);
-                long id = ContentUris.parseId(uri);
-                bundle = new Bundle();
-                bundle.putLong(MainActivity.KEY_TASK_ID, id);
-            }
-
-            TaskEditFragment fragment = new TaskEditFragment();
-            fragment.setArguments(bundle);
-            getSupportFragmentManager().beginTransaction().replace(R.id.task_edit_fragment, fragment)
-                    .commit();
-
-            Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-            setSupportActionBar(toolbar);
+        Bundle bundle = getIntent().getExtras();
+        if (bundle == null) {
+            ContentValues values = new ContentValues();
+            values.put(Locus.Task.COLUMN_TITLE, "Task name");
+            values.put(Locus.Task.COLUMN_DESCRIPTION, "");
+            values.put(Locus.Task.COLUMN_LATITUDE, 0);
+            values.put(Locus.Task.COLUMN_LONGITUDE, 0);
+            values.put(Locus.Task.COLUMN_TRANSITION, 0);
+            values.put(Locus.Task.COLUMN_DUE, -1);
+            values.put(Locus.Task.COLUMN_COMPLETED, 0);
+            Uri uri = getContentResolver().insert(Locus.Task.CONTENT_URI, values);
+            long id = ContentUris.parseId(uri);
+            bundle = new Bundle();
+            bundle.putLong(MainActivity.KEY_TASK_ID, id);
         }
+
+        TaskEditFragment fragment = new TaskEditFragment();
+        fragment.setArguments(bundle);
+        getSupportFragmentManager().beginTransaction().replace(R.id.task_edit_fragment, fragment)
+                .commit();
+
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
     }
+
 
     /**
      * @see android.app.Activity#onOptionsItemSelected(android.view.MenuItem)
@@ -81,9 +82,9 @@ public class TaskEditActivity extends ActionBarActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-        case android.R.id.home:
-            NavUtils.navigateUpFromSameTask(this);
-            break;
+            case android.R.id.home:
+                NavUtils.navigateUpFromSameTask(this);
+                break;
 
         }
         return super.onOptionsItemSelected(item);

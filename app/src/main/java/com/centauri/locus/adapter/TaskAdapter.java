@@ -8,7 +8,6 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.graphics.Bitmap;
-import android.graphics.Paint;
 import android.net.Uri;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory;
 import android.view.LayoutInflater;
@@ -16,13 +15,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
 import android.widget.CursorAdapter;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.centauri.locus.R;
 import com.centauri.locus.provider.Locus;
 import com.centauri.locus.util.BitmapCache;
 import com.centauri.locus.util.StaticMapsLoader;
-import com.centauri.locus.widget.CircularImageView;
 import com.google.android.gms.maps.model.LatLng;
 
 /**
@@ -68,7 +67,7 @@ public class TaskAdapter extends CursorAdapter {
         int completed = cursor.getInt(cursor.getColumnIndexOrThrow(Locus.Task.COLUMN_COMPLETED));
 
         final TextView titleTextView = (TextView) view.findViewById(R.id.title_textview);
-        CircularImageView mapImageView = (CircularImageView) view.findViewById(R.id.location_imageview);
+        ImageView mapImageView = (ImageView) view.findViewById(R.id.location_imageview);
         CheckBox checkBox = (CheckBox) view.findViewById(R.id.checkbox);
 
         titleTextView.setText(title);

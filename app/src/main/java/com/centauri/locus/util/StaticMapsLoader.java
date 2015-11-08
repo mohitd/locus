@@ -10,13 +10,10 @@ import android.widget.ImageView;
 
 import com.google.android.gms.maps.model.LatLng;
 
-import org.apache.http.client.ClientProtocolException;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.impl.client.DefaultHttpClient;
-
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
 
 /**
  * @author mohitd2000
@@ -56,24 +53,23 @@ public class StaticMapsLoader extends AsyncTask<LatLng, Void, Bitmap> {
         if (this.size == SIZE_LARGE) {
             size = "size="; // TODO: Find a large size!
         } else {
-            size = "size=90x90";
+            size = "size=85x85";
         }
         String scale = "scale=2";
         String marker = "markers=color:red%7C" + lat + "," + lon;
         String URL = baseURL + '&' + center + '&' + size + '&' + scale + '&' + marker + "&key="
                 + API_KEY;
 
-        HttpClient client = new DefaultHttpClient();
-        HttpGet request = new HttpGet(URL);
-
         Bitmap bitmap = null;
         try {
-            InputStream is = client.execute(request).getEntity().getContent();
+            URL url = new URL(URL);
+            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+            connection.setRequestMethod("GET");
+            connection.setDoInput(true);
+            connection.connect();
+            InputStream is = connection.getInputStream();
             bitmap = BitmapFactory.decodeStream(is);
             is.close();
-        } catch (ClientProtocolException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
         } catch (IOException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
